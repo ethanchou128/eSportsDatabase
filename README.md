@@ -1,4 +1,4 @@
-Justin's and Ethan's Final Project
+## Justin's and Ethan's Final Project
 
 Info:
 Justin Chiang
