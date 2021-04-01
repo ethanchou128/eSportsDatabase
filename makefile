@@ -16,14 +16,27 @@
 #   -g puts debugging info into the executables (makes them larger)
 CPPFLAGS = -std=c++17 -Wall -Wextra -Werror -Wfatal-errors -Wno-sign-compare -Wnon-virtual-dtor -g
 
-final_project_main_test: final_project.o final_project_main.o 
-	g++ -o final_project_main_test final_project.o final_project_main.o 
+final_project_main_test: final_project.o final_project_main.o interface.o
+	g++ -o final_project_main_test final_project.o final_project_main.o interface.o -lncurses
 
-final_project:
+final_project: final_project.cpp
 	g++ -c $(CPPFLAGS) final_project.cpp
 
-final_project_main:
-	g++ -c $(CPPFLAGS) final_project_main.cpp
+final_project_main:	final_project_main.cpp
+	g++ -c $(CPPFLAGS) final_project_main.cpp 
+
+divisions: divisions.cpp
+	g++ -c $(CPPFLAGS) divisions.cpp
+
+former_divisions: former_divisions.cpp
+	g++ -c $(CPPFLAGS) former_divisions.cpp
+
+#requires -lncurses tag 
+interface: interface.cpp
+	g++ -c $(CPPFLAGS) -lncurses -o interface.cpp
+
+interface_test: interface.o 
+	g++ -o interface_test interface.o
 
 clean:
-	rm -f final_project_main_test final_project.o final_project_main.o 
+	rm -f final_project_main_test final_project.o final_project_main.o interface.o
