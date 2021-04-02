@@ -38,5 +38,11 @@ interface: interface.cpp
 interface_test: interface.o 
 	g++ -o interface_test interface.o
 
+all: *.cpp
+	g++ -c $(CPPFLAGS) *.cpp 
+
+all_test: *.o
+	g++ -o test *.o -lncurses
+
 clean:
-	rm -f final_project_main_test final_project.o final_project_main.o interface.o
+	rm -f final_project_main_test final_project.o final_project_main.o interface.o test
