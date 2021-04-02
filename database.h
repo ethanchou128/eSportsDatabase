@@ -1,7 +1,7 @@
-// final_project.h
+// database.h
 
-#ifndef FINAL_PROJECT_H
-#define FINAL_PROJECT_H
+#ifndef DATABASE_H
+#define DATABASE_H
 
 #include "tools/cmpt_error.h"
 #include "tools/cmpt_trace.h"
@@ -13,7 +13,12 @@
 
 using namespace std;
 
+class Database {
 
+
+
+
+};
 
 
 

@@ -1,7 +1,6 @@
-// interface.cpp
+// menu.cpp
 
-#include "interface.h"
-#include <iostream>
+#include "menu.h"
 
 using namespace std;
 
@@ -15,7 +14,7 @@ void start(){
 
     getch();
 
-    endwin();   ;
+    endwin();   
 
     cout << endl;
 
