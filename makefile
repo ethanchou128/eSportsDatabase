@@ -16,14 +16,14 @@
 #   -g puts debugging info into the executables (makes them larger)
 CPPFLAGS = -std=c++17 -Wall -Wextra -Werror -Wfatal-errors -Wno-sign-compare -Wnon-virtual-dtor -g
 
-final_project_main_test: final_project.o final_project_main.o menu.o
-	g++ -o final_project_main_test final_project.o final_project_main.o menu.o -lncurses
+final_project_main_test: Database.o final_project_main.o Menu.o Team.o
+	g++ -o final_project_main_test Database.o final_project_main.o Menu.o Team.o -lncurses
 
-final_project: final_project.cpp
-	g++ -c $(CPPFLAGS) final_project.cpp
+Database: Database.cpp
+	g++ -c $(CPPFLAGS) Database.cpp
 
-final_project_main:	final_project_main.cpp
-	g++ -c $(CPPFLAGS) final_project_main.cpp 
+Database_main:	Database_main.cpp
+	g++ -c $(CPPFLAGS) Database_main.cpp 
 
 divisions: divisions.cpp
 	g++ -c $(CPPFLAGS) divisions.cpp
@@ -32,11 +32,11 @@ former_divisions: former_divisions.cpp
 	g++ -c $(CPPFLAGS) former_divisions.cpp
 
 #requires -lncurses tag 
-menu: menu.cpp
-	g++ -c $(CPPFLAGS) -lncurses -o menu.cpp
+Menu: Menu.cpp
+	g++ -c $(CPPFLAGS) -lncurses -o Menu.cpp
 
-menu_test: menu.o 
-	g++ -o menu_test menu.o
+Menu_test: Menu.o 
+	g++ -o Menu_test Menu.o
 
 all: *.cpp
 	g++ -c $(CPPFLAGS) *.cpp 
@@ -45,4 +45,4 @@ all_test: *.o
 	g++ -o test *.o -lncurses
 
 clean:
-	rm -f final_project_main_test final_project.o final_project_main.o menu.o test
+	rm -f final_project_main_test Database.o Team.o final_project_main.o Menu.o test
