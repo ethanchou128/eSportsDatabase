@@ -1,7 +1,8 @@
 //final_project_main.cpp
 
-#include "final_project.h"
-#include "menu.h"
+#include "Database.h"
+#include "Menu.h"
+#include "Team.h"
 #include <ncurses.h>
 #include <iostream>
 using namespace std;

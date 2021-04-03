@@ -1,6 +1,6 @@
-// menu.cpp
+// Menu.cpp
 
-#include "menu.h"
+#include "Menu.h"
 
 using namespace std;
 
