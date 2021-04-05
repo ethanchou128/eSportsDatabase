@@ -9,6 +9,7 @@ using namespace std;
 Team::Team()
 { }
 
+///////////////////GETTERS////////////////////////
 string Team::get_full() const { return fullName; };
 string Team::get_short() const { return shortName; };
 vector<string> Team::get_divList() const { return divList; };
@@ -18,6 +19,8 @@ vector<string> Team::get_partners() const { return partners; };
 string Team::get_location() const { return location; };
 int Team::get_dateFounded() const { return dateFounded; };
 
+
+///////////////////SETTERS////////////////////////
 void Team::set_full(string s) { 
     fullName = s;
 }
@@ -27,7 +30,7 @@ void Team::set_short(string s){
 }
 
 void Team::set_divList(string s){
-    fullName = s;
+    divList.push_back(s);
 }   
 
 void Team::set_president(string s){
@@ -39,7 +42,7 @@ void Team::set_ceo(string s){
 }
 
 void Team::set_partner(string s){
-    fullName = s;
+    partners.push_back(s);
 }
 
 void Team::set_location(string s){
