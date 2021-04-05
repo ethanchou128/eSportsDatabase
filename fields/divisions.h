@@ -10,6 +10,6 @@ using namespace std;
 
 class Divisions {
     
-}
+};
 
 #endif

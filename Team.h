@@ -38,7 +38,7 @@ public:
     void set_partner(string s);
     void set_location(string s);
     void set_dateFounded(int i);
-}
+};  
 
 
 #endif
