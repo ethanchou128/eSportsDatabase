@@ -15,7 +15,7 @@
 
 using namespace std;
 
-vector<Team> readFile(string input);
+//vector<Team> readFile(string input);
 
 class Database {
 
@@ -24,7 +24,7 @@ class Database {
 public:
     vector<Team> get_database() const;
     
-   
+    Database();
 
 };
 
