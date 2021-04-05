@@ -10,9 +10,12 @@
 #include "Team.h"
 #include <iostream>
 #include <string>
-
+#include <vector>
+#include <fstream>
 
 using namespace std;
+
+vector<Team> readFile(string input);
 
 class Database {
 
