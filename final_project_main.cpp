@@ -9,6 +9,7 @@ using namespace std;
 
 int main(){
 
-    
+    Database d;
+    d.addEntry();
 
 }
