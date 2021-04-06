@@ -33,6 +33,6 @@ void Divisions::set_win_loss(string s){
     win_loss = s;
 }
 
-void Divisions:;set_championships_won(int i){
+void Divisions::set_championships_won(int i){
     championships_won = i;
 }

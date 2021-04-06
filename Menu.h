@@ -4,15 +4,11 @@
 #define MENU_H
 
 #include <ncurses.h>
+#include "tools/Design.h"
 #include <iostream>
 
 using namespace std;
 
-class Menu {
-
-
-
-
-};
+void start();
 
 #endif
