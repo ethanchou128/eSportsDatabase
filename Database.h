@@ -26,6 +26,17 @@ public:
     
     Database();
 
+    void addEntry();
+    void printEntries(Team t);
+    string getFullName() const;
+    string getShortName() const;
+    vector<string> getDivList() const;
+    string getPresident() const;
+    string getCEO() const;
+    vector<string> getPartners() const;
+    string getLocation() const;
+    int getYearFounded() const;
+
 };
 
 

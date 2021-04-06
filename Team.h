@@ -32,10 +32,10 @@ public:
 
     void set_full(string s); 
     void set_short(string s);
-    void set_divList(string s);
+    void set_divList(vector<string> v);
     void set_president(string s);
     void set_ceo(string s);
-    void set_partner(string s);
+    void set_partner(vector<string> v);
     void set_location(string s);
     void set_dateFounded(int i);
 };  
