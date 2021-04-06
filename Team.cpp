@@ -29,8 +29,10 @@ void Team::set_short(string s){
     shortName = s;
 }
 
-void Team::set_divList(string s){
-    divList.push_back(s);
+void Team::set_divList(vector<string> v){
+    for(string s : v) {
+        divList.push_back(s);
+    }
 }   
 
 void Team::set_president(string s){
@@ -41,8 +43,10 @@ void Team::set_ceo(string s){
     ceo = s;
 }
 
-void Team::set_partner(string s){
-    partners.push_back(s);
+void Team::set_partner(vector<string> v){
+    for(string s : v) {
+        partners.push_back(s);
+    }
 }
 
 void Team::set_location(string s){
