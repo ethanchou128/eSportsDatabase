@@ -10,6 +10,7 @@
 #include <cstdio>   
 #include <ncurses.h>
 #include <iostream>
+#include <vector>
 
 using namespace std;
 
@@ -29,5 +30,9 @@ string getCEO();
 vector<string> getPartners();
 string getLocation();
 int getYearFounded();
+double getNetWorth();
+
+//////////////////delete entry///////////////////
+void deleteEntry(Database &database);
 
 #endif
