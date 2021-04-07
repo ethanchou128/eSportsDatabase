@@ -31,6 +31,9 @@ Database::Database()
 vector<Team> Database::get_database() const {
     return database;
 }
+void Database::replaceVector(vector<Team> t) {
+    database = t;
+}
 
 void Database::add_team(Team t) {
     database.push_back(t);

@@ -8,6 +8,8 @@
 #include <cstdio>   
 #include <ncurses.h>
 #include <iostream>
+#include <algorithm>
+#include <vector>
 #include "tools.h"
 
 using namespace std;
@@ -68,10 +70,10 @@ void askMenu(Database& database){
 
     while (true){
         cout << "-------Menu-------\n";
-        cout << "(A)dd a song.\n"
-                "(F)ind a song.\n"
-                "(D)elete a song.\n"
-                "(L)ist songs.\n"
+        cout << "(A)dd a team.\n"
+                "(F)ind a team.\n"
+                "(D)elete a team.\n"
+                "(L)ist teams.\n"
                 "(Q)uit\n\n";
 
         cout << "Enter the letter of your choice: ";
@@ -84,9 +86,12 @@ void askMenu(Database& database){
         } else if (input == "f"){
             
         } else if (input == "d"){
-            
+            deleteEntry(database);
         } else if (input == "l"){
-            
+            //sort(database.begin(), database.end());
+            // for(Team t : database) {
+            //     printEntries(t);
+            // }
         } else if (input == "q"){ 
             cout << "Thanks for running the program! See you soon!\n";
             break;
@@ -102,39 +107,58 @@ void addEntry(Database& database) {
     Team temp;
     cout << "So you want to add a team? " << endl;
     string fullName = getFullName(database);
-    //cout << fullName << endl;
     temp.set_full(fullName);
     string shortName = getShortName();
-    //cout << shortName << endl;
     temp.set_short(shortName);
     vector<string> games = getDivList();
-    // for(string s : games) {
-    //     cout << s << endl;
-    // }
     temp.set_divList(games);
-    string president = getPresident();
-    //cout << president << endl;
-    temp.set_president(president);
-    string CEO = getCEO();
-    //cout << CEO << endl;
-    temp.set_ceo(CEO);
-    vector<string> sponsors = getPartners();
-    // for(string t : sponsors) {
-    //     cout << t << endl;
-    // }
-    temp.set_partner(sponsors);
+    // string president = getPresident();
+    // temp.set_president(president);
+    // string CEO = getCEO();
+    // temp.set_ceo(CEO);
+    // vector<string> sponsors = getPartners();
+    // temp.set_partner(sponsors);
     string location = getLocation();
-    //cout << location << endl;
     temp.set_location(location);
     int yearFounded = getYearFounded();
-    //cout << yearFounded << endl;
     temp.set_dateFounded(yearFounded);
+    double netWorth = getNetWorth();
+    temp.set_netWorth(netWorth);
     database.add_team(temp);
 
     for(Team t : database.get_database()) {
         printEntries(t);
     }
 
+}
+
+void deleteEntry(Database &database) {
+    for(Team f : database.get_database()) {
+        cout << f.get_full() << endl;
+    }
+    cout << "Please enter the team name that you want to delete: ";
+    string userInput;
+    getline(cin, userInput);
+    bool exists = false;
+    int indexCounter = 0;
+    vector<Team> temp = database.get_database();
+    for(Team t : database.get_database()) {
+        if(t.get_full() == userInput || t.get_short() == userInput) {
+            exists = true;
+            break;
+        }
+        indexCounter++;
+    }
+    if(!exists) {
+        cout << "That team doesn't exist. Please try again." << endl;
+        deleteEntry(database);
+    } else {
+        temp.erase(temp.begin() + indexCounter);
+        database.replaceVector(temp);
+        for(Team f : database.get_database()) {
+            cout << f.get_full() << endl;
+        }
+    }
 }
 
 void printEntries(Team t) {
@@ -144,14 +168,15 @@ void printEntries(Team t) {
     for(string s : v) {
         cout << s << endl;
     }
-    cout << t.get_president() << endl;
-    cout << t.get_ceo() << endl;
-    vector<string> p = t.get_partners();
-    for(string str : p) {
-        cout << str << endl;
-    }
+    // cout << t.get_president() << endl;
+    // cout << t.get_ceo() << endl;
+    // vector<string> p = t.get_partners();
+    // for(string str : p) {
+    //     cout << str << endl;
+    // }
     cout << t.get_location() << endl;
     cout << t.get_dateFounded() << endl;
+    cout << t.get_netWorth() << endl;
 }
 
 string getFullName(const Database& database) {
@@ -219,41 +244,41 @@ string getPresident() {
     return userInput;
 };
     
-string getCEO() {
-    cout << "Please enter your team's CEO: ";
-    string userInput;
-    getline(cin, userInput);
-    return userInput;
-};
+// string getCEO() {
+//     cout << "Please enter your team's CEO: ";
+//     string userInput;
+//     getline(cin, userInput);
+//     return userInput;
+// };
     
-vector<string> getPartners() {
-    cout << "Who are your team's sponsors? " << endl;
-    cout << "When you have finished entering your list, please enter \"X\" to indicate so." << endl;
-    vector<string> sponsors;
-    string userInput;
-    getline(cin, userInput);
-    string hold = userInput;
-    cmpt::to_lower(hold);
-    while(hold != "x") {
-        if(userInput == "") {
-            cout << "You have entered an empty field. Please try again. " << endl;
-        } else {
-            sponsors.push_back(userInput);
-            cout << "Sponsor added." << endl;
-        }
-        getline(cin, userInput);
-        hold = userInput;
-        cmpt::to_lower(hold);
-    }
-    cout << "Ok. Here are your team's sponsors: " << endl;
-    for(string s : sponsors) {
-        cout << s << endl;
-    }
-    return sponsors;
-};
+// vector<string> getPartners() {
+//     cout << "Who are your team's sponsors? " << endl;
+//     cout << "When you have finished entering your list, please enter \"X\" to indicate so." << endl;
+//     vector<string> sponsors;
+//     string userInput;
+//     getline(cin, userInput);
+//     string hold = userInput;
+//     cmpt::to_lower(hold);
+//     while(hold != "x") {
+//         if(userInput == "") {
+//             cout << "You have entered an empty field. Please try again. " << endl;
+//         } else {
+//             sponsors.push_back(userInput);
+//             cout << "Sponsor added." << endl;
+//         }
+//         getline(cin, userInput);
+//         hold = userInput;
+//         cmpt::to_lower(hold);
+//     }
+//     cout << "Ok. Here are your team's sponsors: " << endl;
+//     for(string s : sponsors) {
+//         cout << s << endl;
+//     }
+//     return sponsors;
+// };
     
 string getLocation() {
-    cout << "Please enter your team's home base/location: ";
+    cout << "Please enter your team's region/country: ";
     string userInput;
     getline(cin, userInput);
     return userInput;
@@ -279,4 +304,27 @@ int getYearFounded() {
     return num;
 };
 
+double getNetWorth() {
+    cout << "Please enter your team's net worth, in millions of dollars: ";
+    string userInput;
+    cin >> userInput;
+    bool isNum = true;
+    bool isDecimal = false;
+    for(int i = 0; i < userInput.length(); i++) {
+        if(!isdigit(userInput.at(i))) {
+            if(userInput.at(i) == '.' && !isDecimal) {
+                isDecimal = true;
+            } else {
+                cout << "Sorry, that's an invalid entry. Please Try Again." << endl;
+                isNum = false;
+                break;
+            }
+        }
+    }
+    if(!isNum) {
+        getNetWorth();
+    }
 
+    double num = stod(userInput);
+    return num;
+};

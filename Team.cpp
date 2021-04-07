@@ -13,11 +13,12 @@ Team::Team()
 string Team::get_full() const { return fullName; };
 string Team::get_short() const { return shortName; };
 vector<string> Team::get_divList() const { return divList; };
-string Team::get_president() const { return president; };
-string Team::get_ceo() const { return ceo; };
-vector<string> Team::get_partners() const { return partners; };
+// string Team::get_president() const { return president; };
+// string Team::get_ceo() const { return ceo; };
+// vector<string> Team::get_partners() const { return partners; };
 string Team::get_location() const { return location; };
 int Team::get_dateFounded() const { return dateFounded; };
+double Team::get_netWorth() const { return netWorth; };
 
 
 ///////////////////SETTERS////////////////////////
@@ -35,19 +36,19 @@ void Team::set_divList(vector<string> v){
     }
 }   
 
-void Team::set_president(string s){
-    president = s;
-}
+// void Team::set_president(string s){
+//     president = s;
+// }
 
-void Team::set_ceo(string s){
-    ceo = s;
-}
+// void Team::set_ceo(string s){
+//     ceo = s;
+// }
 
-void Team::set_partner(vector<string> v){
-    for(string s : v) {
-        partners.push_back(s);
-    }
-}
+// void Team::set_partner(vector<string> v){
+//     for(string s : v) {
+//         partners.push_back(s);
+//     }
+// }
 
 void Team::set_location(string s){
     location = s;
@@ -55,4 +56,8 @@ void Team::set_location(string s){
 
 void Team::set_dateFounded(int i){
     dateFounded = i;
+}
+
+void Team:: set_netWorth(double i) {
+    netWorth = i;
 }
