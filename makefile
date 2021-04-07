@@ -45,4 +45,4 @@ all_test: *.o
 	g++ -o test *.o -lncurses
 
 clean:
-	rm -f final_project_main_test Database.o Team.o final_project_main.o Menu.o test
+	rm -f final_project_main_test Database.o Team.o final_project_main.o Menu.o test *.o
