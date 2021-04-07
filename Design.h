@@ -26,10 +26,13 @@ public:
     WINDOW* win;
     Menu* menus;
     int num_menus;
+    int selected_menu;
 
     MenuBar(WINDOW* win, Menu* menus, int num_menus);
 
     void draw();
+
+    void handleTrigger(char trigger);
 };
 
 #endif
