@@ -89,7 +89,7 @@ void askMenu(Database& database){
         } else if (input == "d"){
             deleteEntry(database);
         } else if (input == "l"){
-            //sort(database.begin(), database.end());
+            // sort(database.begin(), database.end());
             // for(Team t : database) {
             //     printEntries(t);
             // }
@@ -219,6 +219,10 @@ void findEntry(Database& database){
 }
 
 void printEntries(const vector<Team>& vT){
+    if (vT.empty()){
+        cout << "There are not records to print!\n";
+        return;
+    }
     for (Team t: vT){
         printEntries(t);
     }
