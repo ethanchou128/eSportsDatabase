@@ -60,7 +60,7 @@ void start_iostream(){
     cout << "Welcome to the eSport Team Database!\n";
     cout << "-----------------------------\n\n";
 
-    Database database;
+    Database database("database.txt");
 
     askMenu(database);
 
@@ -89,11 +89,12 @@ void askMenu(Database& database){
         } else if (input == "d"){
             deleteEntry(database);
         } else if (input == "l"){
-            //sort(database.begin(), database.end());
+            // sort(database.begin(), database.end());
             // for(Team t : database) {
             //     printEntries(t);
             // }
         } else if (input == "q"){ 
+            database.save_to_file("database.txt");
             cout << "Thanks for running the program! See you soon!\n";
             break;
         } else {
@@ -219,6 +220,10 @@ void findEntry(Database& database){
 }
 
 void printEntries(const vector<Team>& vT){
+    if (vT.empty()){
+        cout << "There are not records to print!\n";
+        return;
+    }
     for (Team t: vT){
         printEntries(t);
     }

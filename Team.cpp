@@ -35,7 +35,11 @@ void Team::set_divList(vector<string> v){
     for(string s : v) {
         divList.push_back(s);
     }
-}   
+}
+
+void Team::add_to_divList(string s){
+    divList.push_back(s);
+}
 
 // void Team::set_president(string s){
 //     president = s;

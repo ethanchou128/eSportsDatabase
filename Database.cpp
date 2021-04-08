@@ -6,6 +6,7 @@
 #include "tools.h"
 #include <vector>
 #include <string>
+#include <fstream>
 
 using namespace std;
 
@@ -31,6 +32,10 @@ using namespace std;
 
 Database::Database() 
 { }
+
+Database::Database(string fileName){
+    read_from_file(fileName);
+}
 
 vector<Team> Database::get_database() const {
     return database;
@@ -104,5 +109,100 @@ vector<Team> Database::get_by_dateFounded(int n) const{
         }
     }
     return hold;
+}
+
+//////////////////////File Handling//////////////////////
+void Database::save_to_file(string fileName){
+
+    ofstream file;
+    file.open(fileName);
+
+    if (file.is_open()){;
+
+        for (Team t : database){;
+            file << t.get_full() << ", ";
+            file << t.get_short() << ", ";
+            file << "{";
+            for (int i = 0; i < t.get_divList().size(); i++){
+                if (i != t.get_divList().size() - 1){
+                    file << t.get_divList().at(i) << ", ";
+                } else {
+                    file << t.get_divList().at(i);
+                }
+            }
+            file << "}, ";
+            file << t.get_location() << ", ";
+            file << t.get_dateFounded() << ", ";
+            file << t.get_netWorth() << "\n";
+        }
+    }
+
+
+    file.close();
+
+}
+
+void Database::read_from_file(string fileName){
+    ifstream file;
+    file.open(fileName);
+
+    if (file.is_open()){
+        string line;
+        while(getline(file, line)){
+            read_line(line);
+        }
+    }
+    file.close();
+}
+
+void Database::read_line(const string& line){
+
+    string field;
+    int fieldNum = 1;
+    Team temp;
+    for (int i = 0; i < line.size(); i++){
+
+        if (line.at(i) != ',' && i != line.size() - 1 && line.at(i) != '{' && line.at(i) != '}'){
+
+            field.push_back(line.at(i));
+
+        } else if (i == line.size() - 1){
+            field.push_back(line.at(i));
+            temp.set_netWorth(stod(cmpt::trim(field)));
+        } else if (line.at(i) == ',' && line.at(i - 1) != '}'){
+            field = cmpt::trim(field);
+            switch (fieldNum){
+                case 1:
+                    temp.set_full(field);
+                    fieldNum++;
+                    break;
+                case 2: 
+                    temp.set_short(field);
+                    fieldNum++;
+                    break;
+                case 3:
+                    temp.add_to_divList(field);
+                    break;
+                case 4:
+                    temp.set_location(field);
+                    fieldNum++;
+                    break;
+                case 5:
+                    temp.set_dateFounded(stoi(field));
+                    fieldNum++;
+                    break;
+                
+            }
+            field = "";
+        } else if (line.at(i - 1) == '}' && line.at(i) == ','){
+            temp.add_to_divList(cmpt::trim(field));
+            fieldNum++;
+            field = "";
+        }
+
+    }
+
+    database.push_back(temp);
+
 }
 
