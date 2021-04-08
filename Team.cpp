@@ -3,6 +3,7 @@
 #include "Team.h"
 #include <string>
 #include <vector>
+#include "tools.h"
 
 using namespace std;
 
@@ -23,11 +24,11 @@ double Team::get_netWorth() const { return netWorth; };
 
 ///////////////////SETTERS////////////////////////
 void Team::set_full(string s) { 
-    fullName = s;
+    fullName = cmpt::trim(s);
 }
 
 void Team::set_short(string s){
-    shortName = s;
+    shortName = cmpt::trim(s);
 }
 
 void Team::set_divList(vector<string> v){
@@ -51,7 +52,7 @@ void Team::set_divList(vector<string> v){
 // }
 
 void Team::set_location(string s){
-    location = s;
+    location = cmpt::trim(s);
 }
 
 void Team::set_dateFounded(int i){

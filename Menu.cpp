@@ -74,17 +74,18 @@ void askMenu(Database& database){
                 "(F)ind a team.\n"
                 "(D)elete a team.\n"
                 "(L)ist teams.\n"
-                "(Q)uit\n\n";
+                "(Q)uit\n"
+                "-------------------\n\n";
 
         cout << "Enter the letter of your choice: ";
 
         string input;
-        getline(cin, input);
-        cmpt::to_lower(input);
-        if (input == "a"){
+        cin >> input;
+        cout << endl;
+        if (cmpt::clean(input) == "a"){
             addEntry(database);
         } else if (input == "f"){
-            
+            findEntry(database);
         } else if (input == "d"){
             deleteEntry(database);
         } else if (input == "l"){
@@ -98,10 +99,9 @@ void askMenu(Database& database){
         } else {
             cout << "Input was not valid! Try again!\n";
         }
-
-
     }
 }
+
 
 void addEntry(Database& database) {
     Team temp;
@@ -133,6 +133,10 @@ void addEntry(Database& database) {
 }
 
 void deleteEntry(Database &database) {
+    if (database.get_database().empty()){
+        cout << "There are no records in the database!\n\n";
+        return;
+    }
     for(Team f : database.get_database()) {
         cout << f.get_full() << endl;
     }
@@ -161,11 +165,71 @@ void deleteEntry(Database &database) {
     }
 }
 
-void printEntries(Team t) {
-    cout << t.get_full() << endl;
-    cout << t.get_short() << endl;
+void findEntry(Database& database){
+    if (database.get_database().empty()){
+        cout << "There are no records in the database!\n\n";
+        return;
+    }
+
+    while (true){
+        cout << "-------Find a Team-------\n";
+        cout << "(N)ame of team.\n"
+                "(G)ame teams play.\n"
+                "(L)ocation of teams.\n"
+                "(D)ate teams were founded.\n"
+                "--------------------------\n"
+                "\n(R)eturn to main menu\n\n";
+
+        cout << "Enter the letter of your choice: ";
+
+        string input;
+        cin >> input;
+        cout << "\n";
+        input = cmpt::clean(input);
+        cin.ignore(100, '\n');
+        if (input == "n"){
+            cout << "What is the name of the team: ";
+            string search;
+            getline(cin, search);
+            printEntries(database.get_by_name(search));
+        } else if (input == "g"){
+            cout << "What game does your team play: ";
+            string search;
+            getline(cin, search);
+            printEntries(database.get_by_game(cmpt::clean(search)));
+        } else if (input == "l"){
+            cout << "Where is your team located: ";
+            string search;
+            getline(cin, search);
+            printEntries(database.get_by_location(search));
+        } else if (input == "d"){
+            cout << "What is the name of the team: ";
+            string search;
+            getline(cin, search);
+            int i = stoi(cmpt::trim(search));
+            printEntries(database.get_by_dateFounded(i));
+        } else if (input == "r"){ 
+            break;
+        } else {
+            cout << "Input was not valid! Try again!\n";
+        }
+        break;
+    }
+    return;
+}
+
+void printEntries(const vector<Team>& vT){
+    for (Team t: vT){
+        printEntries(t);
+    }
+}
+
+void printEntries(const Team& t) {
+    cout << "Team Full Name: " << t.get_full() << "\n";
+    cout << "Team Short Name: " << t.get_short() << "\n";
     vector<string> v = t.get_divList();
-    for(string s : v) {
+    cout << "Games Played by Team:\n";
+    for (string s : v) {
         cout << s << endl;
     }
     // cout << t.get_president() << endl;
@@ -174,14 +238,15 @@ void printEntries(Team t) {
     // for(string str : p) {
     //     cout << str << endl;
     // }
-    cout << t.get_location() << endl;
-    cout << t.get_dateFounded() << endl;
-    cout << t.get_netWorth() << endl;
+    cout << "Team location: " << t.get_location() << endl;
+    cout << "Team founded date: " << t.get_dateFounded() << endl;
+    cout << "Team Net Worth: " << t.get_netWorth() << endl;
 }
 
 string getFullName(const Database& database) {
     cout << "Please enter team name: ";
     string userInput;
+    cin.ignore(100, '\n');
     getline(cin, userInput);
     bool exists = false;
     for(Team t : database.get_database()) {
@@ -211,9 +276,8 @@ vector<string> getDivList() {
     //vector<string> eligibleGames; //placeholder for now; will probably fix later.
     string userInput;
     getline(cin, userInput);
-    string hold = userInput;
-    cmpt::to_lower(hold);
-    while(hold != "x") {
+    string hold = cmpt::trim(userInput);
+    while(cmpt::to_lower(hold) != "x") {
         // bool isEligible = false;
         // for(string str : eligibleGames) {
         //     if(userInput == str) {
@@ -227,7 +291,7 @@ vector<string> getDivList() {
         // }
         gamesPlayed.push_back(userInput);
         getline(cin, userInput);
-        hold = userInput;
+        hold = cmpt::trim(userInput);
         cmpt::to_lower(hold);
     }
     cout << "Ok. Here are your team's games played: " << endl;
@@ -237,19 +301,19 @@ vector<string> getDivList() {
     return gamesPlayed;
 };
 
-string getPresident() {
-    cout << "Please enter your team's president: ";
-    string userInput;
-    getline(cin, userInput);
-    return userInput;
-};
+// string getPresident() {
+//     cout << "Please enter your team's president: ";
+//     string userInput;
+//     getline(cin, userInput);
+//     return userInput;
+// }
     
 // string getCEO() {
 //     cout << "Please enter your team's CEO: ";
 //     string userInput;
 //     getline(cin, userInput);
 //     return userInput;
-// };
+// }
     
 // vector<string> getPartners() {
 //     cout << "Who are your team's sponsors? " << endl;
@@ -275,7 +339,7 @@ string getPresident() {
 //         cout << s << endl;
 //     }
 //     return sponsors;
-// };
+// }
     
 string getLocation() {
     cout << "Please enter your team's region/country: ";
@@ -325,6 +389,6 @@ double getNetWorth() {
         getNetWorth();
     }
 
-    double num = stod(userInput);
+    double num = stod(cmpt::trim(userInput));
     return num;
 };

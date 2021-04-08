@@ -12,9 +12,9 @@ class Team {
     string fullName;
     string shortName;
     vector<string> divList;
-    string president;
-    string ceo;
-    vector<string> partners;
+    // string president;
+    // string ceo;
+    // vector<string> partners;
     string location;
     int dateFounded;
     double netWorth;
