@@ -10,6 +10,7 @@
 #include <string>
 #include <vector>
 #include <fstream>
+#include <algorithm>
 
 using namespace std;
 
@@ -24,10 +25,10 @@ public:
     Database();
 
     vector<Team> get_database() const;
+    void replaceVector(vector<Team> t);
     void add_team(Team t);
     int get_size() const;
-    vector<Team> get_by_fullName(string s) const;
-    vector<Team> get_by_shortName(string s) const;
+    vector<Team> get_by_name(string s) const;
     vector<Team> get_by_game(string s) const;
     // vector<Team> get_by_president(string s) const;
     // vector<Team> get_by_ceo(string s) const;

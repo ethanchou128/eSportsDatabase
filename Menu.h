@@ -10,6 +10,7 @@
 #include <cstdio>   
 #include <ncurses.h>
 #include <iostream>
+#include <vector>
 
 using namespace std;
 
@@ -20,7 +21,9 @@ void start();
 void start_iostream();
 void askMenu(Database& database);
 void addEntry(Database& database);
-void printEntries(Team t);
+void findEntry(Database& database);
+void printEntries(const vector<Team>& tV);
+void printEntries(const Team& t);
 string getFullName(const Database& database);
 string getShortName();
 vector<string> getDivList();
@@ -29,5 +32,9 @@ string getCEO();
 vector<string> getPartners();
 string getLocation();
 int getYearFounded();
+double getNetWorth();
+
+//////////////////delete entry///////////////////
+void deleteEntry(Database &database);
 
 #endif
