@@ -274,26 +274,27 @@ string getShortName() {
 };
 
 vector<string> getDivList() {
-    cout << "Which games does your team participate in?" << endl;
+    cout << "Which games does your team participate in? Enter the exact game title." << endl;
     cout << "When you have finished entering your list, please enter \"X\" to indicate so." << endl;
     vector<string> gamesPlayed;
-    //vector<string> eligibleGames; //placeholder for now; will probably fix later.
+    vector<string> eligibleGames;
+    eligibleGames = {"Valorant", "Call of Duty", "League of Legends", "Fortnite", "Rainbow Six Siege", "Overwatch",
+                    "CS:GO", "Super Smash Bros.", "Rocket League"}; //placeholder for now; will probably fix later.
     string userInput;
     getline(cin, userInput);
     string hold = cmpt::trim(userInput);
     while(cmpt::to_lower(hold) != "x") {
-        // bool isEligible = false;
-        // for(string str : eligibleGames) {
-        //     if(userInput == str) {
-        //         cout << "Game Added." << endl;
-        //         gamesPlayed.push_back(userInput);
-        //         isEligible = true;
-        //     }
-        // }
-        // if(!isEligible) {
-        //     cout << "You have entered an invalid or unpopular game. Please try again." << endl;
-        // }
-        gamesPlayed.push_back(userInput);
+        bool isEligible = false;
+        for(string str : eligibleGames) {
+            if(userInput == str) {
+                cout << "Game Added." << endl;
+                gamesPlayed.push_back(userInput);
+                isEligible = true;
+            }
+        }
+        if(!isEligible) {
+            cout << "You have entered an invalid or unpopular game. Please try again." << endl;
+        }
         getline(cin, userInput);
         hold = cmpt::trim(userInput);
         cmpt::to_lower(hold);
