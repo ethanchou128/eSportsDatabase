@@ -60,7 +60,7 @@ void start_iostream(){
     cout << "Welcome to the eSport Team Database!\n";
     cout << "-----------------------------\n\n";
 
-    Database database;
+    Database database("database.txt");
 
     askMenu(database);
 
@@ -94,6 +94,7 @@ void askMenu(Database& database){
             //     printEntries(t);
             // }
         } else if (input == "q"){ 
+            database.save_to_file("database.txt");
             cout << "Thanks for running the program! See you soon!\n";
             break;
         } else {

@@ -23,6 +23,7 @@ class Database {
 public:
     
     Database();
+    Database(string fileName);
 
     vector<Team> get_database() const;
     void replaceVector(vector<Team> t);
@@ -35,7 +36,13 @@ public:
     // vector<Team> get_by_partners(string s) const;
     vector<Team> get_by_location(string s) const;
     vector<Team> get_by_dateFounded(int n) const;
+    void save_to_file(string fileName);
+    void read_from_file(string fileName);
     
+
+private: 
+    void read_line(const string& line);
+
 };
 
 

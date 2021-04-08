@@ -35,6 +35,7 @@ public:
     void set_full(string s); 
     void set_short(string s);
     void set_divList(vector<string> v);
+    void add_to_divList(string s);
     // void set_president(string s);
     // void set_ceo(string s);
     // void set_partner(vector<string> v);
