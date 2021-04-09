@@ -119,22 +119,27 @@ void Database::save_to_file(string fileName){
 
     if (file.is_open()){;
 
-        for (Team t : database){;
-            file << t.get_full() << ", ";
-            file << t.get_short() << ", ";
-            file << "{";
-            for (int i = 0; i < t.get_divList().size(); i++){
-                if (i != t.get_divList().size() - 1){
-                    file << t.get_divList().at(i) << ", ";
-                } else {
-                    file << t.get_divList().at(i);
+        if (!database.empty()){;
+        
+            for (Team t : database){;
+                file << t.get_full() << ", ";
+                file << t.get_short() << ", ";
+                file << "{";
+                for (int i = 0; i < t.get_divList().size(); i++){
+                    if (i != t.get_divList().size() - 1){
+                        file << t.get_divList().at(i) << ", ";
+                    } else {
+                        file << t.get_divList().at(i);
+                    }
                 }
+                file << "}, ";
+                file << t.get_location() << ", ";
+                file << t.get_dateFounded() << ", ";
+                file << t.get_netWorth() << "\n";
             }
-            file << "}, ";
-            file << t.get_location() << ", ";
-            file << t.get_dateFounded() << ", ";
-            file << t.get_netWorth() << "\n";
+
         }
+
     }
 
 
