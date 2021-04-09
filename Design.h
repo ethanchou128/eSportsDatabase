@@ -15,7 +15,15 @@ public:
     string text;
     char trigger;
 
-    Menu(string txt, char trigger);
+    Menu(string txt, char trigger, string* items, int num_items);
+
+    //selected items
+    string* items;
+    int num_items;
+    int selected_item;
+
+    void selectNextItem();
+    void selectPreviousItem();
 
 };
 
@@ -23,6 +31,7 @@ public:
 class MenuBar {
 
 public:
+    WINDOW* menuwin;
     WINDOW* win;
     Menu* menus;
     int num_menus;
@@ -30,7 +39,10 @@ public:
 
     MenuBar(WINDOW* win, Menu* menus, int num_menus);
 
+    void reset();
     void draw();
+    void drawMenu(Menu menu, bool is_selected);
+    void drawMenuItems(Menu menu);
 
     void handleTrigger(char trigger);
 };

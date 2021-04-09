@@ -19,8 +19,16 @@ using namespace std;
 void start(){
 
     initscr();
+    cbreak();
     noecho();
     curs_set(0);
+
+    if (!has_colors()){
+        return;
+    }
+
+    start_color();
+    init_pair(1, COLOR_WHITE, COLOR_BLUE);
     
     int yMax, xMax;
     getmaxyx(stdscr, yMax, xMax);
@@ -28,10 +36,14 @@ void start(){
     WINDOW* win = newwin(yMax/2, xMax/2, yMax/4, xMax/4);
     box(win, 0, 0);
 
+    string menu1[] = {"New", "Open", "Save", "Exit"};
+    string menu2[] = {"Copy", "Cut", "Paste"};
+    string menu3[] = {"Sidebar", "Terminal"};
+
     Menu menus[3] = {
-        Menu("File", 'f'),
-        Menu("Edit", 'e'),
-        Menu("Options", 'o')
+        Menu("File", 'f', menu1, 4),
+        Menu("Edit", 'e', menu2, 3),
+        Menu("Options", 'o', menu3, 2)
     };
 
     MenuBar menubar = MenuBar(win, menus, 3);
@@ -41,9 +53,8 @@ void start(){
     // mvwprintw(win, 0, 7, "Edit");
     // mvwprintw(win, 0, 12, "Options");
 
-    
-    while (true){
-        char ch = wgetch(win);
+    char ch;
+    while ((ch = wgetch(win))){
         menubar.handleTrigger(ch);
         menubar.draw();
     }
