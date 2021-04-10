@@ -42,7 +42,7 @@ string getCEO();
 vector<string> getPartners();
 string getLocation();
 int getYearFounded();
-double getNetWorth();
+float getNetWorth();
 
 //////////////////delete entry///////////////////
 void deleteEntry(Database &database);

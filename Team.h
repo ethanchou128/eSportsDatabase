@@ -17,7 +17,7 @@ class Team {
     // vector<string> partners;
     string location;
     int dateFounded;
-    double netWorth;
+    float netWorth;
 
 public:
     Team();
@@ -30,7 +30,7 @@ public:
     // vector<string> get_partners() const;
     string get_location() const;
     int get_dateFounded() const;
-    double get_netWorth() const;
+    float get_netWorth() const;
 
     void set_full(string s); 
     void set_short(string s);
@@ -41,7 +41,7 @@ public:
     // void set_partner(vector<string> v);
     void set_location(string s);
     void set_dateFounded(int i);
-    void set_netWorth(double i);
+    void set_netWorth(float i);
 };  
 
 

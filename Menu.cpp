@@ -153,11 +153,13 @@ void deleteEntry(Database &database) {
         cout << f.get_full() << endl;
     }
     cout << "Please enter the team name that you want to delete: ";
+    cin.ignore(100, '\n');
     string userInput;
     getline(cin, userInput);
+    
     bool exists = false;
     int indexCounter = 0;
-    vector<Team> temp = database.get_database();
+    
     for(Team t : database.get_database()) {
         if(t.get_full() == userInput || t.get_short() == userInput) {
             exists = true;
@@ -169,12 +171,14 @@ void deleteEntry(Database &database) {
         cout << "That team doesn't exist. Please try again." << endl;
         deleteEntry(database);
     } else {
+        vector<Team> temp = database.get_database();
         temp.erase(temp.begin() + indexCounter);
         database.replaceVector(temp);
         for(Team f : database.get_database()) {
             cout << f.get_full() << endl;
         }
     }
+    return;
 }
 
 void findEntry(Database& database){
@@ -261,8 +265,8 @@ void printEntries(const Team& t) {
 
 string getFullName(const Database& database) {
     cout << "Please enter team name: ";
-    string userInput;
     cin.ignore(100, '\n');
+    string userInput;
     getline(cin, userInput);
     bool exists = false;
     for(Team t : database.get_database()) {
@@ -287,30 +291,44 @@ string getShortName() {
 
 vector<string> getDivList() {
     cout << "Which games does your team participate in? Enter the exact game title." << endl;
-    cout << "When you have finished entering your list, please enter \"X\" to indicate so." << endl;
+    cout << "When you have finished entering your list, please enter 0 to indicate so." << endl;
     vector<string> gamesPlayed;
     vector<string> eligibleGames;
-    eligibleGames = {"Valorant", "Call of Duty", "League of Legends", "Fortnite", "Rainbow Six Siege", "Overwatch",
-                    "CS:GO", "Super Smash Bros.", "Rocket League"}; //placeholder for now; will probably fix later.
-    string userInput;
-    getline(cin, userInput);
-    string hold = cmpt::trim(userInput);
-    while(cmpt::to_lower(hold) != "x") {
+    eligibleGames = {"Call of Duty", "CS:GO", "Fortnite", "League of Legends", "Overwatch", "Rainbow Six Siege", 
+                     "Rocket League", "Super Smash Bros.", "Valorant"};
+    int userInput;
+    cout << "Here are the eligible games: " << endl;
+    for(int i = 0; i < eligibleGames.size(); i++) {
+        cout << "(" << i+1 << ")" << " " << eligibleGames.at(i) << endl;
+    }
+    //getline(cin, userInput);
+    cin >> userInput;
+    //int hold = cmpt::trim(userInput);
+    while(userInput != 0) {
         bool isEligible = false;
-        for(string str : eligibleGames) {
-            if(userInput == str) {
-                cout << "Game Added." << endl;
-                gamesPlayed.push_back(userInput);
+        // for(string str : eligibleGames) {
+        //     if(userInput == str) {
+        //         cout << "Game Added." << endl;
+        //         gamesPlayed.push_back(userInput);
+        //         isEligible = true;
+        //     }
+        // }
+        for(int i = 0; i < eligibleGames.size(); i++) {
+            if(userInput - 1 == i) {
+                cout << eligibleGames.at(i) << " has been added." << endl;
+                gamesPlayed.push_back(eligibleGames.at(i));
                 isEligible = true;
             }
         }
         if(!isEligible) {
             cout << "You have entered an invalid or unpopular game. Please try again." << endl;
         }
-        getline(cin, userInput);
-        hold = cmpt::trim(userInput);
-        cmpt::to_lower(hold);
+        //getline(cin, userInput);
+        //hold = cmpt::trim(userInput);
+        //cmpt::to_lower(hold);
+        cin >> userInput;
     }
+    sort(gamesPlayed.begin(), gamesPlayed.end());
     cout << "Ok. Here are your team's games played: " << endl;
     for(string s : gamesPlayed) {
         cout << s << endl;
@@ -361,8 +379,20 @@ vector<string> getDivList() {
 string getLocation() {
     cout << "Please enter your team's region/country: ";
     string userInput;
-    getline(cin, userInput);
-    return userInput;
+    cin >> userInput;
+    bool isCountry = true;
+    for(int i = 0; i < userInput.length(); i++) {
+        if(isdigit(userInput.at(i))) {
+            cout << "Sorry, that's an invalid entry. Please Try Again." << endl;
+            isCountry = false;
+            break;
+        }
+    }
+    if(!isCountry) {
+        getLocation();
+    }
+    string country = cmpt::trim(userInput);
+    return country;
 };
     
 int getYearFounded() {
@@ -385,7 +415,7 @@ int getYearFounded() {
     return num;
 };
 
-double getNetWorth() {
+float getNetWorth() {
     cout << "Please enter your team's net worth, in millions of dollars: ";
     string userInput;
     cin >> userInput;
@@ -405,7 +435,6 @@ double getNetWorth() {
     if(!isNum) {
         getNetWorth();
     }
-
-    double num = stod(cmpt::trim(userInput));
+    float num = stof(cmpt::trim(userInput));
     return num;
 };

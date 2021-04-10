@@ -4,9 +4,13 @@
 #include "Database.h"
 #include "Team.h"
 #include "tools.h"
+#include <iostream>
 #include <vector>
 #include <string>
 #include <fstream>
+#include <algorithm>
+#include <cstdlib>
+#include <cstdio>
 
 using namespace std;
 
@@ -78,6 +82,9 @@ vector<Team> Database::get_by_game(string s) const{
     }
     return hold;
 }
+
+//////////////Sorting////////////////////////////
+
 
 // vector<Team> Database::get_by_president(string s) const{
 
