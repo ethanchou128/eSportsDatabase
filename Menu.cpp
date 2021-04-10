@@ -104,6 +104,7 @@ void askMenu(Database& database){
             // for(Team t : database) {
             //     printEntries(t);
             // }
+            listEntries(database);
         } else if (input == "q"){ 
             database.save_to_file("database.txt");
             cout << "Thanks for running the program! See you soon!\n";
@@ -234,6 +235,133 @@ void findEntry(Database& database){
     return;
 }
 
+bool sortByFullName(const Team &left, const Team &right) {
+    return left.get_full() < right.get_full();
+}
+
+bool sortByLocation(const Team &left, const Team &right) {
+    return left.get_location() < right.get_location();
+}
+
+bool sortByNetWorth(const Team &left, const Team &right) {
+    return left.get_netWorth() < right.get_netWorth();
+}
+
+bool sortByYearFounded(const Team &left, const Team &right) {
+    return left.get_dateFounded() < right.get_dateFounded();
+}
+
+bool reverseSortFullName(const Team &left, const Team &right) {
+    return left.get_full() > right.get_full();
+}
+
+bool reverseSortLocation(const Team &left, const Team &right) {
+    return left.get_location() > right.get_location();
+}
+
+bool reverseSortNetWorth(const Team &left, const Team &right) {
+    return left.get_netWorth() > right.get_netWorth();
+}
+
+bool reverseSortYearFounded(const Team &left, const Team &right) {
+    return left.get_dateFounded() > right.get_dateFounded();
+}
+
+void listEntries(Database &database) {
+    while (true){
+        cout << "------Records List------\n";
+        cout << "Would you like to list teams by: " << endl;
+        cout << "(A)lphabetical Order\n"
+                "(L)ocation\n"
+                "(N)et Worth\n"
+                "(Y)ear Founded\n"
+                "--------------------------\n"
+                "\n(G)o back to main menu\n\n";
+
+        cout << "Enter the letter of your choice: ";
+
+        string input;
+        cin >> input;
+        cout << endl;
+        if (cmpt::clean(input) == "a"){
+            cout << "Would you like your sort in reverse?" << endl;
+            cout << "If \"Y\" isn't entered, your answer will be assumed as no: "; 
+            string userInput;
+            cin >> userInput;
+            vector<Team> temp = database.get_database();
+            if(cmpt::clean(userInput) == "y") {
+                sort(temp.begin(), temp.end(), reverseSortFullName);
+            } else {
+                cout << "Here are the team names, in alphabetical order: " << endl;
+                sort(temp.begin(), temp.end(), sortByFullName);
+            }
+            for(Team t : temp) {
+                cout << t.get_full() << endl;
+            }
+            database.replaceVector(temp);
+            cout << endl;
+        } else if (input == "l"){
+            cout << "Would you like your sort in reverse?" << endl;
+            cout << "If \"Y\" isn't entered, your answer will be assumed as no: "; 
+            string userInput;
+            cin >> userInput;
+            vector<Team> temp = database.get_database();
+            if(cmpt::clean(userInput) == "y") {
+                cout << "Here are the team names, with locations reverse sorted: " << endl;
+                sort(temp.begin(), temp.end(), reverseSortLocation);
+            } else {
+                cout << "Here are the team names, sorted by location: " << endl;
+                sort(temp.begin(), temp.end(), sortByLocation);
+            }
+            for(Team t : temp) {
+                cout << t.get_full() << " (" << t.get_location() << ")" << endl;
+            }
+            database.replaceVector(temp);
+            cout << endl;
+        } else if (input == "n"){
+            cout << "Would you like your sort in reverse?" << endl;
+            cout << "If \"Y\" isn't entered, your answer will be assumed as no: "; 
+            string userInput;
+            cin >> userInput;
+            vector<Team> temp = database.get_database();
+            if(cmpt::clean(userInput) == "y") {
+                cout << "Here are the team names, with net worths reverse sorted: " << endl;
+                sort(temp.begin(), temp.end(), reverseSortNetWorth);
+            } else {
+                cout << "Here are the team names, sorted by net worth: " << endl;
+                sort(temp.begin(), temp.end(), sortByNetWorth);
+            }
+            for(Team t : temp) {
+                cout << "$" << t.get_netWorth() << " million (" << t.get_full() << ")" << endl;
+            }
+            database.replaceVector(temp);
+            cout << endl;
+        } else if (input == "y"){ 
+            cout << "Would you like your sort in reverse?" << endl;
+            cout << "If \"Y\" isn't entered, your answer will be assumed as no: "; 
+            string userInput;
+            cin >> userInput;
+            vector<Team> temp = database.get_database();
+            if(cmpt::clean(userInput) == "y") {
+                cout << "Here are the teams, sorted by newest-oldest: " << endl;
+                sort(temp.begin(), temp.end(), reverseSortYearFounded);
+            } else {
+                cout << "Here are the teams, sorted by oldest-newest: " << endl;
+                sort(temp.begin(), temp.end(), sortByYearFounded);
+            }
+            for(Team t : temp) {
+                cout << t.get_full() << " (Est. " << t.get_dateFounded() << ")" << endl;
+            }
+            database.replaceVector(temp);
+            cout << endl;
+        } else if (input == "g"){ 
+            break;
+        }else {
+            cout << "Input was not valid! Try again!\n";
+        }
+    }
+}
+
 void printEntries(const vector<Team>& vT){
     if (vT.empty()){
         cout << "There are not records to print!\n";
@@ -301,9 +429,7 @@ vector<string> getDivList() {
     for(int i = 0; i < eligibleGames.size(); i++) {
         cout << "(" << i+1 << ")" << " " << eligibleGames.at(i) << endl;
     }
-    //getline(cin, userInput);
     cin >> userInput;
-    //int hold = cmpt::trim(userInput);
     while(userInput != 0) {
         bool isEligible = false;
         // for(string str : eligibleGames) {

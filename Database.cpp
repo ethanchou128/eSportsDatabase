@@ -83,8 +83,6 @@ vector<Team> Database::get_by_game(string s) const{
     return hold;
 }
 
-//////////////Sorting////////////////////////////
-
 
 // vector<Team> Database::get_by_president(string s) const{
 
