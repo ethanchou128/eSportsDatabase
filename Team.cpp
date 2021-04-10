@@ -19,7 +19,7 @@ vector<string> Team::get_divList() const { return divList; };
 // vector<string> Team::get_partners() const { return partners; };
 string Team::get_location() const { return location; };
 int Team::get_dateFounded() const { return dateFounded; };
-double Team::get_netWorth() const { return netWorth; };
+float Team::get_netWorth() const { return netWorth; };
 
 
 ///////////////////SETTERS////////////////////////
@@ -63,6 +63,6 @@ void Team::set_dateFounded(int i){
     dateFounded = i;
 }
 
-void Team:: set_netWorth(double i) {
+void Team:: set_netWorth(float i) {
     netWorth = i;
 }
