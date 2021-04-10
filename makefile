@@ -15,36 +15,20 @@
 #   -Wnon-virtual-dtor warns about non-virtual destructors
 #   -g puts debugging info into the executables (makes them larger)
 CPPFLAGS = -std=c++17 -Wall -Wextra -Werror -Wfatal-errors -Wno-sign-compare -Wnon-virtual-dtor -g
+SRCS := $(wildcard *.cpp)
+OBJS := $(patsubst %.cpp,%.o,$(SRCS))
+CC := g++
+CFLAGS := -Wall -g
+TARGET := test
 
-all: object run
+all: $(TARGET)
+$(TARGET): $(OBJS)
+	$(CC) -o  $@ $^  -lncurses
 
-final_project_main_test: Database.o final_project_main.o Menu.o Team.o
-	g++ -o final_project_main_test Database.o final_project_main.o Menu.o Team.o -lncurses
-
-Database: Database.cpp
-	g++ -c $(CPPFLAGS) Database.cpp
-
-Database_main:	Database_main.cpp
-	g++ -c $(CPPFLAGS) Database_main.cpp 
-
-divisions: divisions.cpp
-	g++ -c $(CPPFLAGS) divisions.cpp
-
-former_divisions: former_divisions.cpp
-	g++ -c $(CPPFLAGS) former_divisions.cpp
-
-#requires -lncurses tag 
-Menu: Menu.cpp
-	g++ -c $(CPPFLAGS) -lncurses -o Menu.cpp
-
-Menu_test: Menu.o 
-	g++ -o Menu_test Menu.o
-
-object: *.cpp
-	g++ -c $(CPPFLAGS) *.cpp 
-
-run: *.o
-	g++ -o test *.o -lncurses
+%.o: %.cpp
+	$(CC) $(CPPFLAGS) -c $<
 
 clean:
-	rm -f final_project_main_test Database.o Team.o final_project_main.o Menu.o test *.o
+	rm -rf $(TARGET) *.o 
+
+.PHONY: all clean
