@@ -423,38 +423,6 @@ void findEntry(Database& database){
 ///////////////////////////////////////////////////////////////////////////////
 // Listing
 ///////////////////////////////////////////////////////////////////////////////
-bool sortByFullName(const Team &left, const Team &right) {
-    return left.get_full() < right.get_full();
-}
-
-bool sortByLocation(const Team &left, const Team &right) {
-    return left.get_location() < right.get_location();
-}
-
-bool sortByNetWorth(const Team &left, const Team &right) {
-    return left.get_netWorth() < right.get_netWorth();
-}
-
-bool sortByYearFounded(const Team &left, const Team &right) {
-    return left.get_dateFounded() < right.get_dateFounded();
-}
-
-bool reverseSortFullName(const Team &left, const Team &right) {
-    return left.get_full() > right.get_full();
-}
-
-bool reverseSortLocation(const Team &left, const Team &right) {
-    return left.get_location() > right.get_location();
-}
-
-bool reverseSortNetWorth(const Team &left, const Team &right) {
-    return left.get_netWorth() > right.get_netWorth();
-}
-
-bool reverseSortYearFounded(const Team &left, const Team &right) {
-    return left.get_dateFounded() > right.get_dateFounded();
-}
-
 void listEntries(Database &database) {
     while (true){
         cout << "------Records List------\n";
