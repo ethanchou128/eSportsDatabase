@@ -12,9 +12,6 @@ class Team {
     string fullName;
     string shortName;
     vector<string> divList;
-    // string president;
-    // string ceo;
-    // vector<string> partners;
     string location;
     int dateFounded;
     float netWorth;
@@ -25,9 +22,6 @@ public:
     string get_full() const;
     string get_short() const;
     vector<string> get_divList() const;
-    // string get_president() const;
-    // string get_ceo() const;
-    // vector<string> get_partners() const;
     string get_location() const;
     int get_dateFounded() const;
     float get_netWorth() const;
@@ -36,9 +30,6 @@ public:
     void set_short(string s);
     void set_divList(vector<string> v);
     void add_to_divList(string s);
-    // void set_president(string s);
-    // void set_ceo(string s);
-    // void set_partner(vector<string> v);
     void set_location(string s);
     void set_dateFounded(int i);
     void set_netWorth(float i);

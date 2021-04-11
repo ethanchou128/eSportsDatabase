@@ -14,26 +14,6 @@
 
 using namespace std;
 
-// vector<Team> readFile(string input){
-//     ifstream inFile(input);
-//     if (inFile.fail()){
-//         string userInput = "";
-//         cout << "Unable to open input file: " << input << ". Does not exist." << endl;
-// 		exit(EXIT_FAILURE);
-//     }
-//     vector<Team> wordlist;
-//     while (true){
-//         string word;
-//         inFile >> word; //words are read in
-//         if (inFile.fail()){//once everything has been read in, loop is broken
-//             break;
-//         }
-//         //wordlist.push_back(word); //words are added to vector
-//     }
-//     inFile.close(); //file closed
-//     return wordlist;
-//}
-
 Database::Database() 
 { }
 
@@ -41,9 +21,10 @@ Database::Database(string fileName){
     read_from_file(fileName);
 }
 
-vector<Team> Database::get_database() const {
+const vector<Team>& Database::get_database() const {
     return database;
 }
+
 void Database::replaceVector(vector<Team> t) {
     database = t;
 }
@@ -83,19 +64,6 @@ vector<Team> Database::get_by_game(string s) const{
     return hold;
 }
 
-
-// vector<Team> Database::get_by_president(string s) const{
-
-// }
-
-// vector<Team> Database::get_by_ceo(string s) const{
-
-// }
-
-// vector<Team> Database::get_by_partners(string s) const{
-
-// }
-
 vector<Team> Database::get_by_location(string s) const{
     vector<Team> hold;
     for (Team t : database){
@@ -116,16 +84,14 @@ vector<Team> Database::get_by_dateFounded(int n) const{
     return hold;
 }
 
-//////////////////////File Handling//////////////////////
+/////////////////////////////////////////////////////////
+// File Handling
+/////////////////////////////////////////////////////////
 void Database::save_to_file(string fileName){
-
     ofstream file;
     file.open(fileName);
-
     if (file.is_open()){;
-
         if (!database.empty()){;
-        
             for (Team t : database){;
                 file << t.get_full() << ", ";
                 file << t.get_short() << ", ";
@@ -142,20 +108,14 @@ void Database::save_to_file(string fileName){
                 file << t.get_dateFounded() << ", ";
                 file << t.get_netWorth() << "\n";
             }
-
         }
-
     }
-
-
     file.close();
-
 }
 
 void Database::read_from_file(string fileName){
     ifstream file;
     file.open(fileName);
-
     if (file.is_open()){
         string line;
         while(getline(file, line)){
@@ -165,17 +125,14 @@ void Database::read_from_file(string fileName){
     file.close();
 }
 
+//Specific to files created by save_to_file
 void Database::read_line(const string& line){
-
     string field;
     int fieldNum = 1;
     Team temp;
     for (int i = 0; i < line.size(); i++){
-
         if (line.at(i) != ',' && i != line.size() - 1 && line.at(i) != '{' && line.at(i) != '}'){
-
             field.push_back(line.at(i));
-
         } else if (i == line.size() - 1){
             field.push_back(line.at(i));
             temp.set_netWorth(stod(cmpt::trim(field)));
@@ -201,7 +158,6 @@ void Database::read_line(const string& line){
                     temp.set_dateFounded(stoi(field));
                     fieldNum++;
                     break;
-                
             }
             field = "";
         } else if (line.at(i - 1) == '}' && line.at(i) == ','){
@@ -209,10 +165,118 @@ void Database::read_line(const string& line){
             fieldNum++;
             field = "";
         }
-
     }
-
     database.push_back(temp);
-
 }
 
+/////////////////////////////////////////////////////////
+// sorting
+/////////////////////////////////////////////////////////
+bool Database::sortByFullName(const Team &left, const Team &right) {
+    return left.get_full() < right.get_full();
+}
+
+bool Database::sortByLocation(const Team &left, const Team &right) {
+    // sort by two fields
+    // when the locations are the same
+    // sorts team alphabetically
+    if (left.get_location() < right.get_location()){
+        return true;
+    }
+    if (right.get_location() < left.get_location()){
+        return false;
+    }
+    if (left.get_full() < right.get_full()){
+        return true;
+    }
+    if (right.get_full() < left.get_full()){
+        return false;
+    }
+    return false;
+}
+
+bool Database::sortByNetWorth(const Team &left, const Team &right) {
+    return left.get_netWorth() < right.get_netWorth();
+}
+
+bool Database::sortByYearFounded(const Team &left, const Team &right) {
+    if (left.get_dateFounded() < right.get_dateFounded()){
+        return true;
+    }
+    if (right.get_dateFounded() < left.get_dateFounded()){
+        return false;
+    }
+    if (left.get_full() < right.get_full()){
+        return true;
+    }
+    if (right.get_full() < left.get_full()){
+        return false;
+    }
+    return false;
+}
+
+bool Database::reverseSortFullName(const Team &left, const Team &right) {
+    return left.get_full() > right.get_full();
+}
+
+bool Database::reverseSortLocation(const Team &left, const Team &right) {
+    if (left.get_location() > right.get_location()){
+        return true;
+    }
+    if (right.get_location() > left.get_location()){
+        return false;
+    }
+    if (left.get_full() < right.get_full()){
+        return true;
+    }
+    if (right.get_full() < left.get_full()){
+        return false;
+    }
+    return false;
+}
+
+bool Database::reverseSortNetWorth(const Team &left, const Team &right) {
+    return left.get_netWorth() > right.get_netWorth();
+}
+
+bool Database::reverseSortYearFounded(const Team &left, const Team &right) {
+    if (left.get_dateFounded() > right.get_dateFounded()){
+        return true;
+    }
+    if (right.get_dateFounded() > left.get_dateFounded()){
+        return false;
+    }
+    if (left.get_full() < right.get_full()){
+        return true;
+    }
+    if (right.get_full() < left.get_full()){
+        return false;
+    }
+    return false;
+}
+
+
+void Database::sort_by_name(){
+    sort(database.begin(), database.end(), sortByFullName);
+}
+void Database::sort_by_revname(){
+    sort(database.begin(), database.end(), reverseSortFullName);
+}
+void Database::sort_by_location(){
+    sort(database.begin(), database.end(), sortByLocation);
+}
+void Database::sort_by_revlocation(){
+    sort(database.begin(), database.end(), reverseSortLocation);
+}
+void Database::sort_by_netWorth(){
+    sort(database.begin(), database.end(), sortByNetWorth);
+}
+void Database::sort_by_revnetWorth(){
+    sort(database.begin(), database.end(), reverseSortNetWorth);
+}
+void Database::sort_by_yearFounded(){
+    sort(database.begin(), database.end(), sortByYearFounded);
+}
+void Database::sort_by_revyearFounded(){
+    sort(database.begin(), database.end(), reverseSortYearFounded);
+}
