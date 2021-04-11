@@ -29,11 +29,18 @@ void start();
 
 /////////////////////iosteam//////////////////////
 void start_iostream();
+
+// Menu:
 void askMenu(Database& database);
 void addEntry(Database& database);
 void findEntry(Database& database);
-void printEntries(const vector<Team>& tV);
+
+//Printing:
+void printEntries(Database& database);
+void printEntries(const vector<Team>& vT);
 void printEntries(const Team& t);
+
+//Adding:
 string getFullName(const Database& database);
 string getShortName();
 vector<string> getDivList();
@@ -44,11 +51,11 @@ string getLocation();
 int getYearFounded();
 float getNetWorth();
 
-//////////////////delete entry///////////////////
+// Delete:
 void deleteEntry(Database &database);
 void listEntries(Database &database);
 
-//////////////listing entries////////////////////
+// Listing:
 bool sortByFullName(const Team &left, const Team &right);
 bool sortByLocation(const Team &left, const Team &right);
 bool sortByNetWorth(const Team &left, const Team &right);

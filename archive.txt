@@ -1,0 +1,61 @@
+## This where all unused functions will be stored
+## so as to not clutter the main code 
+
+############################################################
+## Menu.cpp 
+
+// string getPresident() {
+//     cout << "Please enter your team's president: ";
+//     string userInput;
+//     getline(cin, userInput);
+//     return userInput;
+// }
+    
+// string getCEO() {
+//     cout << "Please enter your team's CEO: ";
+//     string userInput;
+//     getline(cin, userInput);
+//     return userInput;
+// }
+    
+// vector<string> getPartners() {
+//     cout << "Who are your team's sponsors? " << endl;
+//     cout << "When you have finished entering your list, please enter \"X\" to indicate so." << endl;
+//     vector<string> sponsors;
+//     string userInput;
+//     getline(cin, userInput);
+//     string hold = userInput;
+//     cmpt::to_lower(hold);
+//     while(hold != "x") {
+//         if(userInput == "") {
+//             cout << "You have entered an empty field. Please try again. " << endl;
+//         } else {
+//             sponsors.push_back(userInput);
+//             cout << "Sponsor added." << endl;
+//         }
+//         getline(cin, userInput);
+//         hold = userInput;
+//         cmpt::to_lower(hold);
+//     }
+//     cout << "Ok. Here are your team's sponsors: " << endl;
+//     for(string s : sponsors) {
+//         cout << s << endl;
+//     }
+//     return sponsors;
+// }
+
+########################################
+// string president = getPresident();
+// temp.set_president(president);
+// string CEO = getCEO();
+// temp.set_ceo(CEO);
+// vector<string> sponsors = getPartners();
+// temp.set_partner(sponsors);
+
+########################################
+// cout << t.get_president() << endl;
+// cout << t.get_ceo() << endl;
+// vector<string> p = t.get_partners();
+// for(string str : p) {
+//     cout << str << endl;
+// }

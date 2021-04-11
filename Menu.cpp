@@ -33,7 +33,7 @@ void start(){
     int yMax, xMax;
     getmaxyx(stdscr, yMax, xMax);
 
-    WINDOW* win = newwin(yMax/2, xMax/2, yMax/4, xMax/4);
+    WINDOW* win = newwin(yMax*3/4, xMax*3/4, yMax/8, xMax/8);
     box(win, 0, 0);
 
     string menu1[] = {"New", "Open", "Save", "Exit"};
@@ -63,9 +63,14 @@ void start(){
 
 }
 
-
-/////////////////////iosteam//////////////////////
-
+///////////////////////////////////////////////////////////////////////////////
+// iostream
+// 
+// Make sure to change the comment code in final_project_main.cpp
+//
+// This will be used at the defualt menu if ncurses takes too long
+// 
+///////////////////////////////////////////////////////////////////////////////
 void start_iostream(){
 
     cout << "Welcome to the eSport Team Database!\n";
@@ -77,6 +82,10 @@ void start_iostream(){
 
 } 
 
+
+///////////////////////////////////////////////////////////////////////////////
+// Menu System
+///////////////////////////////////////////////////////////////////////////////
 void askMenu(Database& database){
 
     while (true){
@@ -115,251 +124,12 @@ void askMenu(Database& database){
     }
 }
 
-
-void addEntry(Database& database) {
-    Team temp;
-    cout << "So you want to add a team? " << endl;
-    string fullName = getFullName(database);
-    temp.set_full(fullName);
-    string shortName = getShortName();
-    temp.set_short(shortName);
-    vector<string> games = getDivList();
-    temp.set_divList(games);
-    // string president = getPresident();
-    // temp.set_president(president);
-    // string CEO = getCEO();
-    // temp.set_ceo(CEO);
-    // vector<string> sponsors = getPartners();
-    // temp.set_partner(sponsors);
-    string location = getLocation();
-    temp.set_location(location);
-    int yearFounded = getYearFounded();
-    temp.set_dateFounded(yearFounded);
-    double netWorth = getNetWorth();
-    temp.set_netWorth(netWorth);
-    database.add_team(temp);
-
-    for(Team t : database.get_database()) {
-        printEntries(t);
-    }
-
-}
-
-void deleteEntry(Database &database) {
-    if (database.get_database().empty()){
-        cout << "There are no records in the database!\n\n";
-        return;
-    }
-    for(Team f : database.get_database()) {
-        cout << f.get_full() << endl;
-    }
-    cout << "Please enter the team name that you want to delete: ";
-    cin.ignore(100, '\n');
-    string userInput;
-    getline(cin, userInput);
-    
-    bool exists = false;
-    int indexCounter = 0;
-    
-    for(Team t : database.get_database()) {
-        if(t.get_full() == userInput || t.get_short() == userInput) {
-            exists = true;
-            break;
-        }
-        indexCounter++;
-    }
-    if(!exists) {
-        cout << "That team doesn't exist. Please try again." << endl;
-        deleteEntry(database);
-    } else {
-        vector<Team> temp = database.get_database();
-        temp.erase(temp.begin() + indexCounter);
-        database.replaceVector(temp);
-        for(Team f : database.get_database()) {
-            cout << f.get_full() << endl;
-        }
-    }
-    return;
-}
-
-void findEntry(Database& database){
-    if (database.get_database().empty()){
-        cout << "There are no records in the database!\n\n";
-        return;
-    }
-
-    while (true){
-        cout << "-------Find a Team-------\n";
-        cout << "(N)ame of team.\n"
-                "(G)ame teams play.\n"
-                "(L)ocation of teams.\n"
-                "(D)ate teams were founded.\n"
-                "--------------------------\n"
-                "\n(R)eturn to main menu\n\n";
-
-        cout << "Enter the letter of your choice: ";
-
-        string input;
-        cin >> input;
-        cout << "\n";
-        input = cmpt::clean(input);
-        cin.ignore(100, '\n');
-        if (input == "n"){
-            cout << "What is the name of the team: ";
-            string search;
-            getline(cin, search);
-            printEntries(database.get_by_name(search));
-        } else if (input == "g"){
-            cout << "What game does your team play: ";
-            string search;
-            getline(cin, search);
-            printEntries(database.get_by_game(cmpt::clean(search)));
-        } else if (input == "l"){
-            cout << "Where is your team located: ";
-            string search;
-            getline(cin, search);
-            printEntries(database.get_by_location(search));
-        } else if (input == "d"){
-            cout << "What is the name of the team: ";
-            string search;
-            getline(cin, search);
-            int i = stoi(cmpt::trim(search));
-            printEntries(database.get_by_dateFounded(i));
-        } else if (input == "r"){ 
-            break;
-        } else {
-            cout << "Input was not valid! Try again!\n";
-        }
-        break;
-    }
-    return;
-}
-
-bool sortByFullName(const Team &left, const Team &right) {
-    return left.get_full() < right.get_full();
-}
-
-bool sortByLocation(const Team &left, const Team &right) {
-    return left.get_location() < right.get_location();
-}
-
-bool sortByNetWorth(const Team &left, const Team &right) {
-    return left.get_netWorth() < right.get_netWorth();
-}
-
-bool sortByYearFounded(const Team &left, const Team &right) {
-    return left.get_dateFounded() < right.get_dateFounded();
-}
-
-bool reverseSortFullName(const Team &left, const Team &right) {
-    return left.get_full() > right.get_full();
-}
-
-bool reverseSortLocation(const Team &left, const Team &right) {
-    return left.get_location() > right.get_location();
-}
-
-bool reverseSortNetWorth(const Team &left, const Team &right) {
-    return left.get_netWorth() > right.get_netWorth();
-}
-
-bool reverseSortYearFounded(const Team &left, const Team &right) {
-    return left.get_dateFounded() > right.get_dateFounded();
-}
-
-void listEntries(Database &database) {
-    while (true){
-        cout << "------Records List------\n";
-        cout << "Would you like to list teams by: " << endl;
-        cout << "(A)lphabetical Order\n"
-                "(L)ocation\n"
-                "(N)et Worth\n"
-                "(Y)ear Founded\n"
-                "--------------------------\n"
-                "\n(G)o back to main menu\n\n";
-
-        cout << "Enter the letter of your choice: ";
-
-        string input;
-        cin >> input;
-        cout << endl;
-        if (cmpt::clean(input) == "a"){
-            cout << "Would you like your sort in reverse?" << endl;
-            cout << "If \"Y\" isn't entered, your answer will be assumed as no: "; 
-            string userInput;
-            cin >> userInput;
-            vector<Team> temp = database.get_database();
-            if(cmpt::clean(userInput) == "y") {
-                sort(temp.begin(), temp.end(), reverseSortFullName);
-            } else {
-                cout << "Here are the team names, in alphabetical order: " << endl;
-                sort(temp.begin(), temp.end(), sortByFullName);
-            }
-            for(Team t : temp) {
-                cout << t.get_full() << endl;
-            }
-            database.replaceVector(temp);
-            cout << endl;
-        } else if (input == "l"){
-            cout << "Would you like your sort in reverse?" << endl;
-            cout << "If \"Y\" isn't entered, your answer will be assumed as no: "; 
-            string userInput;
-            cin >> userInput;
-            vector<Team> temp = database.get_database();
-            if(cmpt::clean(userInput) == "y") {
-                cout << "Here are the team names, with locations reverse sorted: " << endl;
-                sort(temp.begin(), temp.end(), reverseSortLocation);
-            } else {
-                cout << "Here are the team names, sorted by location: " << endl;
-                sort(temp.begin(), temp.end(), sortByLocation);
-            }
-            for(Team t : temp) {
-                cout << t.get_full() << " (" << t.get_location() << ")" << endl;
-            }
-            database.replaceVector(temp);
-            cout << endl;
-        } else if (input == "n"){
-            cout << "Would you like your sort in reverse?" << endl;
-            cout << "If \"Y\" isn't entered, your answer will be assumed as no: "; 
-            string userInput;
-            cin >> userInput;
-            vector<Team> temp = database.get_database();
-            if(cmpt::clean(userInput) == "y") {
-                cout << "Here are the team names, with net worths reverse sorted: " << endl;
-                sort(temp.begin(), temp.end(), reverseSortNetWorth);
-            } else {
-                cout << "Here are the team names, sorted by net worth: " << endl;
-                sort(temp.begin(), temp.end(), sortByNetWorth);
-            }
-            for(Team t : temp) {
-                cout << "$" << t.get_netWorth() << " million (" << t.get_full() << ")" << endl;
-            }
-            database.replaceVector(temp);
-            cout << endl;
-        } else if (input == "y"){ 
-            cout << "Would you like your sort in reverse?" << endl;
-            cout << "If \"Y\" isn't entered, your answer will be assumed as no: "; 
-            string userInput;
-            cin >> userInput;
-            vector<Team> temp = database.get_database();
-            if(cmpt::clean(userInput) == "y") {
-                cout << "Here are the teams, sorted by newest-oldest: " << endl;
-                sort(temp.begin(), temp.end(), reverseSortYearFounded);
-            } else {
-                cout << "Here are the teams, sorted by oldest-newest: " << endl;
-                sort(temp.begin(), temp.end(), sortByYearFounded);
-            }
-            for(Team t : temp) {
-                cout << t.get_full() << " (Est. " << t.get_dateFounded() << ")" << endl;
-            }
-            database.replaceVector(temp);
-            cout << endl;
-        } else if (input == "g"){ 
-            break;
-        }else {
-            cout << "Input was not valid! Try again!\n";
-        }
-    }
+///////////////////////////////////////////////////////////////////////////////
+// Printing
+///////////////////////////////////////////////////////////////////////////////
+void printEntries(Database& database){
+    database.sort_by_name();
+    printEntries(database.get_database());
 }
 
 void printEntries(const vector<Team>& vT){
@@ -367,8 +137,14 @@ void printEntries(const vector<Team>& vT){
         cout << "There are not records to print!\n";
         return;
     }
+    int i = 1;
+    
     for (Team t: vT){
+        cout << "Team " << i << ": \n";
+        cout << "------\n";
         printEntries(t);
+        cout << "\n";
+        i++;
     }
 }
 
@@ -380,15 +156,35 @@ void printEntries(const Team& t) {
     for (string s : v) {
         cout << s << endl;
     }
-    // cout << t.get_president() << endl;
-    // cout << t.get_ceo() << endl;
-    // vector<string> p = t.get_partners();
-    // for(string str : p) {
-    //     cout << str << endl;
-    // }
+
     cout << "Team location: " << t.get_location() << endl;
     cout << "Team founded date: " << t.get_dateFounded() << endl;
     cout << "Team Net Worth: " << t.get_netWorth() << endl;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// Adding 
+///////////////////////////////////////////////////////////////////////////////
+void addEntry(Database& database) {
+    Team temp;
+    cout << "So you want to add a team? " << endl;
+    string fullName = getFullName(database);
+    temp.set_full(fullName);
+    string shortName = getShortName();
+    temp.set_short(shortName);
+    vector<string> games = getDivList();
+    temp.set_divList(games);
+    
+    string location = getLocation();
+    temp.set_location(location);
+    int yearFounded = getYearFounded();
+    temp.set_dateFounded(yearFounded);
+    double netWorth = getNetWorth();
+    temp.set_netWorth(netWorth);
+    database.add_team(temp);
+
+    printEntries(database);
+
 }
 
 string getFullName(const Database& database) {
@@ -462,50 +258,11 @@ vector<string> getDivList() {
     return gamesPlayed;
 };
 
-// string getPresident() {
-//     cout << "Please enter your team's president: ";
-//     string userInput;
-//     getline(cin, userInput);
-//     return userInput;
-// }
-    
-// string getCEO() {
-//     cout << "Please enter your team's CEO: ";
-//     string userInput;
-//     getline(cin, userInput);
-//     return userInput;
-// }
-    
-// vector<string> getPartners() {
-//     cout << "Who are your team's sponsors? " << endl;
-//     cout << "When you have finished entering your list, please enter \"X\" to indicate so." << endl;
-//     vector<string> sponsors;
-//     string userInput;
-//     getline(cin, userInput);
-//     string hold = userInput;
-//     cmpt::to_lower(hold);
-//     while(hold != "x") {
-//         if(userInput == "") {
-//             cout << "You have entered an empty field. Please try again. " << endl;
-//         } else {
-//             sponsors.push_back(userInput);
-//             cout << "Sponsor added." << endl;
-//         }
-//         getline(cin, userInput);
-//         hold = userInput;
-//         cmpt::to_lower(hold);
-//     }
-//     cout << "Ok. Here are your team's sponsors: " << endl;
-//     for(string s : sponsors) {
-//         cout << s << endl;
-//     }
-//     return sponsors;
-// }
-    
 string getLocation() {
     cout << "Please enter your team's region/country: ";
     string userInput;
-    cin >> userInput;
+    cin.ignore(100, '\n');
+    getline(cin, userInput);
     bool isCountry = true;
     for(int i = 0; i < userInput.length(); i++) {
         if(isdigit(userInput.at(i))) {
@@ -523,21 +280,20 @@ string getLocation() {
     
 int getYearFounded() {
     cout << "Please enter the year your team was founded: ";
-    string userInput;
+    int userInput;
+    cin.ignore(100, '\n');
+    cin.sync();
     cin >> userInput;
-    bool isNum = true;
-    for(int i = 0; i < userInput.length(); i++) {
-        if(!isdigit(userInput.at(i))) {
-            cout << "Sorry, that's an invalid entry. Please Try Again." << endl;
-            isNum = false;
-            break;
-        }
+    while (cin.fail()){
+        cout << "Sorry, that's an invalid entry. Please Try Again." << endl;
+        cin >> userInput;
     }
-    if(!isNum) {
-        getYearFounded();
-    }
+    
+    // if(!isNum) {
+    //     getYearFounded();
+    // }
 
-    int num = stoi(cmpt::trim(userInput));
+    int num = userInput;
     return num;
 };
 
@@ -564,3 +320,228 @@ float getNetWorth() {
     float num = stof(cmpt::trim(userInput));
     return num;
 };
+
+///////////////////////////////////////////////////////////////////////////////
+// Deleting 
+///////////////////////////////////////////////////////////////////////////////
+void deleteEntry(Database &database) {
+    if (database.get_database().empty()){
+        cout << "There are no records in the database!\n\n";
+        return;
+    }
+    cout << "Teams in database: \n";
+    for(Team f : database.get_database()) {
+        cout << f.get_full() << endl;
+    }
+    cout << "Please enter the team name that you want to delete: ";
+    cin.ignore(100, '\n');
+    string userInput;
+    getline(cin, userInput);
+    
+    bool exists = false;
+    int indexCounter = 0;
+    
+    for(Team t : database.get_database()) {
+        if(t.get_full() == userInput || t.get_short() == userInput) {
+            exists = true;
+            break;
+        }
+        indexCounter++;
+    }
+    if(!exists) {
+        cout << "That team doesn't exist. Please try again." << endl;
+        deleteEntry(database);
+    } else {
+        vector<Team> temp = database.get_database();
+        temp.erase(temp.begin() + indexCounter);
+        database.replaceVector(temp);
+        for(Team f : database.get_database()) {
+            cout << f.get_full() << endl;
+        }
+    }
+    return;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// Finding 
+///////////////////////////////////////////////////////////////////////////////
+void findEntry(Database& database){
+    if (database.get_database().empty()){
+        cout << "There are no records in the database!\n\n";
+        return;
+    }
+
+    database.sort_by_name();
+
+    while (true){
+        cout << "-------Find a Team-------\n";
+        cout << "(N)ame of team.\n"
+                "(G)ame teams play.\n"
+                "(L)ocation of teams.\n"
+                "(D)ate teams were founded.\n"
+                "--------------------------\n"
+                "\n(R)eturn to main menu\n\n";
+
+        cout << "Enter the letter of your choice: ";
+
+        string input;
+        cin >> input;
+        cout << "\n";
+        input = cmpt::clean(input);
+        cin.ignore(100, '\n');
+        if (input == "n"){
+            cout << "What is the name of the team: ";
+            string search;
+            getline(cin, search);
+            printEntries(database.get_by_name(search));
+        } else if (input == "g"){
+            cout << "What game does your team play: ";
+            string search;
+            getline(cin, search);
+            printEntries(database.get_by_game(cmpt::clean(search)));
+        } else if (input == "l"){
+            cout << "Where is your team located: ";
+            string search;
+            getline(cin, search);
+            printEntries(database.get_by_location(search));
+        } else if (input == "d"){
+            cout << "What is the name of the team: ";
+            string search;
+            getline(cin, search);
+            int i = stoi(cmpt::trim(search));
+            printEntries(database.get_by_dateFounded(i));
+        } else if (input == "r"){ 
+            break;
+        } else {
+            cout << "Input was not valid! Try again!\n";
+        }
+        break;
+    }
+    return;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// Listing
+///////////////////////////////////////////////////////////////////////////////
+bool sortByFullName(const Team &left, const Team &right) {
+    return left.get_full() < right.get_full();
+}
+
+bool sortByLocation(const Team &left, const Team &right) {
+    return left.get_location() < right.get_location();
+}
+
+bool sortByNetWorth(const Team &left, const Team &right) {
+    return left.get_netWorth() < right.get_netWorth();
+}
+
+bool sortByYearFounded(const Team &left, const Team &right) {
+    return left.get_dateFounded() < right.get_dateFounded();
+}
+
+bool reverseSortFullName(const Team &left, const Team &right) {
+    return left.get_full() > right.get_full();
+}
+
+bool reverseSortLocation(const Team &left, const Team &right) {
+    return left.get_location() > right.get_location();
+}
+
+bool reverseSortNetWorth(const Team &left, const Team &right) {
+    return left.get_netWorth() > right.get_netWorth();
+}
+
+bool reverseSortYearFounded(const Team &left, const Team &right) {
+    return left.get_dateFounded() > right.get_dateFounded();
+}
+
+void listEntries(Database &database) {
+    while (true){
+        cout << "------Records List------\n";
+        cout << "Would you like to list teams by: " << endl;
+        cout << "(A)lphabetical Order\n"
+                "(L)ocation\n"
+                "(N)et Worth\n"
+                "(Y)ear Founded\n"
+                "--------------------------\n"
+                "\n(G)o back to main menu\n\n";
+
+        cout << "Enter the letter of your choice: ";
+
+        string input;
+        cin >> input;
+        cout << endl;
+        if (cmpt::clean(input) == "a"){
+            cout << "Would you like your sort in reverse?" << endl;
+            cout << "If \"Y\" isn't entered, your answer will be assumed as no: "; 
+            string userInput;
+            cin >> userInput;
+            if(cmpt::clean(userInput) == "y") {
+                database.sort_by_revname();
+            } else {
+                cout << "Here are the team names, in alphabetical order: " << endl;
+                database.sort_by_name();
+            }
+            for(Team t : database.get_database()) {
+                cout << t.get_full() << endl;
+            }
+            // database.replaceVector(temp);
+            cout << endl;
+        } else if (input == "l"){
+            cout << "Would you like your sort in reverse?" << endl;
+            cout << "If \"Y\" isn't entered, your answer will be assumed as no: "; 
+            string userInput;
+            cin >> userInput;
+            if(cmpt::clean(userInput) == "y") {
+                cout << "Here are the team names, with locations reverse sorted: " << endl;
+                database.sort_by_revlocation();
+            } else {
+                cout << "Here are the team names, sorted by location: " << endl;
+                database.sort_by_location();
+            }
+            for(Team t : database.get_database()) {
+                cout << t.get_full() << " (" << t.get_location() << ")" << endl;
+            }
+            // database.replaceVector(temp);
+            cout << endl;
+        } else if (input == "n"){
+            cout << "Would you like your sort in reverse?" << endl;
+            cout << "If \"Y\" isn't entered, your answer will be assumed as no: "; 
+            string userInput;
+            cin >> userInput;
+            if(cmpt::clean(userInput) == "y") {
+                cout << "Here are the team names, with net worths reverse sorted: " << endl;
+                database.sort_by_revnetWorth();
+            } else {
+                cout << "Here are the team names, sorted by net worth: " << endl;
+                database.sort_by_netWorth();
+            }
+            for(Team t : database.get_database()) {
+                cout << "$" << t.get_netWorth() << " million (" << t.get_full() << ")" << endl;
+            }
+            // database.replaceVector(temp);
+            cout << endl;
+        } else if (input == "y"){ 
+            cout << "Would you like your sort in reverse?" << endl;
+            cout << "If \"Y\" isn't entered, your answer will be assumed as no: "; 
+            string userInput;
+            cin >> userInput;
+            if(cmpt::clean(userInput) == "y") {
+                cout << "Here are the teams, sorted by newest-oldest: " << endl;
+                database.sort_by_revyearFounded();
+            } else {
+                cout << "Here are the teams, sorted by oldest-newest: " << endl;
+                database.sort_by_yearFounded();
+            }
+            for(Team t : database.get_database()) {
+                cout << t.get_full() << " (Est. " << t.get_dateFounded() << ")" << endl;
+            }
+            // database.replaceVector(temp);
+            cout << endl;
+        } else if (input == "g"){ 
+            break;
+        }else {
+            cout << "Input was not valid! Try again!\n";
+        }
+    }
+}

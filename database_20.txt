@@ -1,0 +1,20 @@
+100 Thieves, 100T, {Call of Duty, Fortnite, League of Legends, Valorant}, United States, 2017, 190
+Cloud9, C9, {CS:GO, Fortnite, League of Legends, Overwatch, Rainbow Six Siege, Super Smash Bros., Valorant}, United States, 2013, 350
+Dallas Fuel, DAL, {Overwatch}, United States, 2016, 0.08
+FaZe Clan, FaZe, {CS:GO, Call of Duty, Fortnite, Rainbow Six Siege, Rocket League, Valorant}, United States, 2010, 305
+Fnatic, FNC, {CS:GO, Fortnite, League of Legends, Rainbow Six Siege, Valorant}, United Kingdom, 2004, 120
+G2 Esports, G2, {CS:GO, Fortnite, League of Legends, Rainbow Six Siege, Rocket League, Valorant}, Germany, 2015, 240.8
+Generation Gaming, Gen.G, {CS:GO, Fortnite, League of Legends, Overwatch, Valorant}, South Korea, 2017, 270
+Giants Gaming, Giants, {CS:GO, Call of Duty, Fortnite, League of Legends, Rainbow Six Siege, Rocket League}, Spain, 2008, 0.6
+H2k-Gaming, H2k, {CS:GO, Call of Duty, League of Legends, Overwatch}, United Kingdom, 2003, 0.713
+Immortals, IMT, {CS:GO, League of Legends, Overwatch, Rainbow Six Siege, Super Smash Bros.}, United States, 2015, 306.5
+Invictus Gaming, IG, {League of Legends, Overwatch}, China, 2011, 11.9
+Luminosity Gaming, LG, {Call of Duty, Fortnite, Super Smash Bros.}, Canada, 2015, 3.65
+Misfits Gaming, Misfits, {Call of Duty, League of Legends, Overwatch}, United Kingdom, 2016, 175
+NRG Esports, NRG, {Call of Duty, Fortnite, Overwatch, Rocket League, Valorant}, United States, 2015, 155
+Rogue, RGE, {Fortnite, League of Legends, Rainbow Six Siege, Rocket League, Super Smash Bros.}, United States, 2016, 1.98
+SK Telecom T1, T1, {Fortnite, League of Legends, Overwatch, Super Smash Bros., Valorant}, South Korea, 2003, 150
+Samsung Galaxy, SSG, {League of Legends}, South Korea, 2013, 5.31
+Team Envy, NV, {CS:GO, Call of Duty, Fortnite, League of Legends, Overwatch, Rocket League, Super Smash Bros., Valorant}, United States, 2007, 170
+Team Liquid, Liquid, {CS:GO, Call of Duty, Fortnite, League of Legends, Rainbow Six Siege, Rocket League, Super Smash Bros., Valorant}, Netherlands, 2000, 467
+Team SoloMid, TSM, {Fortnite, League of Legends, Rainbow Six Siege, Super Smash Bros., Valorant}, United States, 2009, 410
