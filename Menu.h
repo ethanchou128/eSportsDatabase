@@ -53,16 +53,9 @@ float getNetWorth();
 
 // Delete:
 void deleteEntry(Database &database);
-void listEntries(Database &database);
 
 // Listing:
-bool sortByFullName(const Team &left, const Team &right);
-bool sortByLocation(const Team &left, const Team &right);
-bool sortByNetWorth(const Team &left, const Team &right);
-bool sortByYearFounded(const Team &left, const Team &right);
-bool reverseSortFullName(const Team &left, const Team &right);
-bool reverseSortLocation(const Team &left, const Team &right);
-bool reverseSortNetWorth(const Team &left, const Team &right);
-bool reverseSortYearFounded(const Team &left, const Team &right);
+void listEntries(Database &database);
+
 
 #endif
