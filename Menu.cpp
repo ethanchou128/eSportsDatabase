@@ -84,7 +84,7 @@ void start_iostream(){
 void askMenu(Database& database){
 
     while (true){
-        cout << "-------Menu-------\n";
+        cout << endl << "-------Menu-------\n";
         cout << "(A)dd a team.\n"
                 "(F)ind a team.\n"
                 "(D)elete a team.\n"
@@ -163,19 +163,43 @@ void printEntries(const Team& t) {
 void addEntry(Database& database) {
     Team temp;
     cout << "So you want to add a team? " << endl;
+    cout << "If you would like to return to the main menu, please enter \"X\"." << endl;
     string fullName = getFullName(database);
-    temp.set_full(fullName);
+    if(fullName != "x") {
+        temp.set_full(fullName);
+    } else {
+        return;
+    }
     string shortName = getShortName();
-    temp.set_short(shortName);
+    if(shortName != "x") {
+        temp.set_short(shortName);
+    } else {
+        return;
+    }
     vector<string> games = getDivList();
-    temp.set_divList(games);
-    
+    if(games.size() != 0) {
+        temp.set_divList(games);
+    } else {
+        return;
+    }
     string location = getLocation();
-    temp.set_location(location);
+    if(location != "x") {
+        temp.set_location(location);
+    } else {
+        return;
+    }
     int yearFounded = getYearFounded();
-    temp.set_dateFounded(yearFounded);
-    double netWorth = getNetWorth();
-    temp.set_netWorth(netWorth);
+    if(yearFounded != -1) {
+        temp.set_dateFounded(yearFounded);
+    } else {
+        return;
+    }
+    float netWorth = getNetWorth();
+    if(netWorth != -1) {
+        temp.set_netWorth(netWorth);
+    } else {
+        return;
+    }
     database.add_team(temp);
 
     printEntries(database);
@@ -186,31 +210,57 @@ string getFullName(const Database& database) {
     cout << "Please enter team name: ";
     cin.ignore(100, '\n');
     string userInput;
+    string s = "";
     getline(cin, userInput);
-    bool exists = false;
-    for(Team t : database.get_database()) {
-        if(t.get_full() == userInput) {
+    for(char ch : userInput) {
+        s += tolower(ch);
+    }
+    if(s == "x") {
+        return "x";
+    }
+    bool isValid = false;
+    while(!isValid) {
+        bool exists = false;
+        for(Team t : database.get_database()) {
+            if(t.get_full() == userInput) {
+                exists = true;
+            }
+        }
+        if(exists) {
             cout << "That team already exists. Try again." << endl;
-            exists = true;
-            break;
+            cin >> userInput;
+        } else if (userInput == "") {
+            cout << "No input was detected. Try again." << endl;
+            cin >> userInput;
+        } else {
+            isValid = true;
         }
     }
-    if(exists) {
-        getFullName(database);
-    }
+    // if(exists) {
+    //     getFullName(database);
+    // }
     return userInput;
 };
 
 string getShortName() {
     cout << "Please enter your team's short name: ";
+    //cin.ignore(100, '\n');
     string userInput;
     getline(cin, userInput);
+    string s = "";
+    for(char ch : userInput) {
+        s += tolower(ch);
+    }
+    if(s == "x") {
+        return "x";
+    }
     return userInput;
 };
 
 vector<string> getDivList() {
     cout << "Which games does your team participate in? Enter the exact game title." << endl;
-    cout << "When you have finished entering your list, please enter 0 to indicate so." << endl;
+    cout << "When you have finished entering your list, please enter 0 to indicate so." << endl << endl;;
+    cout << "**If you'd like to return to the main menu, please enter \"-1\".**" << endl << endl;
     vector<string> gamesPlayed;
     vector<string> eligibleGames;
     eligibleGames = {"Call of Duty", "CS:GO", "Fortnite", "League of Legends", "Overwatch", "Rainbow Six Siege", 
@@ -221,28 +271,42 @@ vector<string> getDivList() {
         cout << "(" << i+1 << ")" << " " << eligibleGames.at(i) << endl;
     }
     cin >> userInput;
+    if(cin.fail()) {
+        cout << "You have not read instructions properly. Program is aborting now." << endl;
+        exit(EXIT_FAILURE);
+    }
+    if(userInput == -1) {
+        vector<string> empty = {};
+        return empty;
+    }
     while(userInput != 0) {
         bool isEligible = false;
-        // for(string str : eligibleGames) {
-        //     if(userInput == str) {
-        //         cout << "Game Added." << endl;
-        //         gamesPlayed.push_back(userInput);
-        //         isEligible = true;
-        //     }
-        // }
+        bool isEntered = false;
         for(int i = 0; i < eligibleGames.size(); i++) {
-            if(userInput - 1 == i) {
-                cout << eligibleGames.at(i) << " has been added." << endl;
-                gamesPlayed.push_back(eligibleGames.at(i));
-                isEligible = true;
+            if(i == userInput-1) {
+                for(int j = 0; j < gamesPlayed.size(); j++) {
+                    if(eligibleGames.at(i) == gamesPlayed.at(j)) {
+                        isEntered = true;
+                    }
+                }
+                if(!isEntered) {
+                    cout << eligibleGames.at(i) << " has been added." << endl;
+                    gamesPlayed.push_back(eligibleGames.at(i));
+                    isEligible = true;
+                } else {
+                    cout << eligibleGames.at(i) << " has already been added.";
+                    cout << " Please try again." << endl;
+                    isEligible = true;
+                }
             }
         }
         if(!isEligible) {
+            if(userInput == -1) {
+                vector<string> empty = {};
+                return empty;
+            }
             cout << "You have entered an invalid or unpopular game. Please try again." << endl;
         }
-        //getline(cin, userInput);
-        //hold = cmpt::trim(userInput);
-        //cmpt::to_lower(hold);
         cin >> userInput;
     }
     sort(gamesPlayed.begin(), gamesPlayed.end());
@@ -255,9 +319,16 @@ vector<string> getDivList() {
 
 string getLocation() {
     cout << "Please enter your team's region/country: ";
-    string userInput;
     cin.ignore(100, '\n');
+    string userInput;
     getline(cin, userInput);
+    string s = "";
+    for(char ch : userInput) {
+        s += tolower(ch);
+    }
+    if(s == "x") {
+        return "x";
+    }
     bool isCountry = true;
     for(int i = 0; i < userInput.length(); i++) {
         if(isdigit(userInput.at(i))) {
@@ -275,9 +346,10 @@ string getLocation() {
     
 int getYearFounded() {
     cout << "Please enter the year your team was founded: ";
+    cout << "If you'd like to return to the main menu, please enter \"-1\"." << endl;
     int userInput;
-    cin.ignore(100, '\n');
-    cin.sync();
+    //cin.ignore(100, '\n');
+    //cin.sync();
     cin >> userInput;
     while (cin.fail()){
         cout << "Sorry, that's an invalid entry. Please Try Again." << endl;
@@ -290,12 +362,16 @@ int getYearFounded() {
 
     int num = userInput;
     return num;
+
 };
 
 float getNetWorth() {
     cout << "Please enter your team's net worth, in millions of dollars: ";
     string userInput;
     cin >> userInput;
+    if(userInput == "-1") {
+        return -1;
+    }
     bool isNum = true;
     bool isDecimal = false;
     for(int i = 0; i < userInput.length(); i++) {
@@ -312,8 +388,9 @@ float getNetWorth() {
     if(!isNum) {
         getNetWorth();
     }
-    float num = stof(cmpt::trim(userInput));
+    float num = stof(userInput);
     return num;
+
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -345,7 +422,8 @@ void deleteEntry(Database &database) {
     }
     if(!exists) {
         cout << "That team doesn't exist. Please try again." << endl;
-        deleteEntry(database);
+        //deleteEntry(database);
+        return;
     } else {
         vector<Team> temp = database.get_database();
         temp.erase(temp.begin() + indexCounter);
