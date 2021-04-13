@@ -15,6 +15,7 @@ NRG Esports, NRG, {Call of Duty, Fortnite, Overwatch, Rocket League, Valorant}, 
 Rogue, RGE, {Fortnite, League of Legends, Rainbow Six Siege, Rocket League, Super Smash Bros.}, United States, 2016, 1.98
 SK Telecom T1, T1, {Fortnite, League of Legends, Overwatch, Super Smash Bros., Valorant}, South Korea, 2003, 150
 Samsung Galaxy, SSG, {League of Legends}, South Korea, 2013, 5.31
+Sentinels, SEN, {Fortnite, Valorant}, United States, 2018, 0.167
 Team Envy, NV, {CS:GO, Call of Duty, Fortnite, League of Legends, Overwatch, Rocket League, Super Smash Bros., Valorant}, United States, 2007, 170
 Team Liquid, Liquid, {CS:GO, Call of Duty, Fortnite, League of Legends, Rainbow Six Siege, Rocket League, Super Smash Bros., Valorant}, Netherlands, 2000, 467
 Team SoloMid, TSM, {Fortnite, League of Legends, Rainbow Six Siege, Super Smash Bros., Valorant}, United States, 2009, 410
