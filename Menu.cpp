@@ -34,22 +34,24 @@ void start(){
     getmaxyx(stdscr, yMax, xMax);
 
     WINDOW* win = newwin(yMax*3/4, xMax*3/4, yMax/8, xMax/8);
+    keypad(win, true);
     box(win,0,0);
     
     Menu menus[5] = {
         Menu("Add", 'a'),
-        Menu("Find", 'f'),
         Menu("Delete", 'd'), 
+        Menu("Find", 'f'),
         Menu("List", 'l'),
         Menu("Quit", 'q')
     };
 
     MenuOut menuout = MenuOut(win, menus, 5);
-    menuout.draw();
+    menuout.reset();
 
-    char ch;
-    while ((ch = wgetch(win))){
-        menuout.handleTrigger(ch);
+    
+    while (menuout.run == true){
+        int ch = wgetch(win);
+        menuout.handleTriggerMenu(ch);
         menuout.draw();
     }
 
