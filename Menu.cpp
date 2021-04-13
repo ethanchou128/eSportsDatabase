@@ -19,47 +19,42 @@ using namespace std;
 void start(){
 
     initscr();
-    cbreak();
     noecho();
+    cbreak();
     curs_set(0);
 
-    if (!has_colors()){
-        return;
+    if (has_colors()){
+        start_color();
+        init_pair(1, COLOR_WHITE, COLOR_BLUE);
+        assume_default_colors(COLOR_WHITE, COLOR_BLUE);
     }
 
-    start_color();
-    init_pair(1, COLOR_WHITE, COLOR_BLUE);
-    
+
     int yMax, xMax;
     getmaxyx(stdscr, yMax, xMax);
 
     WINDOW* win = newwin(yMax*3/4, xMax*3/4, yMax/8, xMax/8);
-    box(win, 0, 0);
-
-    string menu1[] = {"New", "Open", "Save", "Exit"};
-    string menu2[] = {"Copy", "Cut", "Paste"};
-    string menu3[] = {"Sidebar", "Terminal"};
-
-    Menu menus[3] = {
-        Menu("File", 'f', menu1, 4),
-        Menu("Edit", 'e', menu2, 3),
-        Menu("Options", 'o', menu3, 2)
+    box(win,0,0);
+    
+    Menu menus[5] = {
+        Menu("Add", 'a'),
+        Menu("Find", 'f'),
+        Menu("Delete", 'd'), 
+        Menu("List", 'l'),
+        Menu("Quit", 'q')
     };
 
-    MenuBar menubar = MenuBar(win, menus, 3);
-    menubar.draw();
-    
-    // mvwprintw(win, 0, 2, "File");
-    // mvwprintw(win, 0, 7, "Edit");
-    // mvwprintw(win, 0, 12, "Options");
+    MenuOut menuout = MenuOut(win, menus, 5);
+    menuout.draw();
 
     char ch;
     while ((ch = wgetch(win))){
-        menubar.handleTrigger(ch);
-        menubar.draw();
+        menuout.handleTrigger(ch);
+        menuout.draw();
     }
 
-    endwin();   
+
+    endwin();
 
 }
 
