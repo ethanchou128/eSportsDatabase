@@ -20,18 +20,29 @@ class Menu {
 
 public:
 
-    int start_x;
+    int start_x_menu;
     string text;
     char trigger;
     
 
-    Menu(string text, char trigger);
-    
+    Menu(string text, char trigger, string* options, char* options_trigger, int num_options);
+
+    int start_x_options;
+    string* options;
+    char* options_trigger;
+    int num_options;
+    bool selected;
+    int selected_option;
+
+    void selectNextOption();
+    void selectPreviousOption();
+
 };
 
 class MenuOut{
 
 public:
+    WINDOW* optionwin;
     WINDOW* win;
     Menu* menus;
     int num_menus;
@@ -47,8 +58,10 @@ public:
     void draw();
     void drawMenu(Menu menu, bool is_selected);
     void print_centered(WINDOW* win, int start_row, string text);
+    void drawMenuOptions(Menu menu);
 
     void handleTriggerMenu(int trigger);
+    void handleTriggerOptions(Menu& menu, int trigger);
     void selectNextMenu();
     void selectPreviousMenu();
 

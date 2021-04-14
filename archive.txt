@@ -59,3 +59,21 @@
 // for(string str : p) {
 //     cout << str << endl;
 // }
+
+############################################################
+## Design.cpp 
+int ch;
+drawMenuOptions(menu);
+wrefresh(win);
+while(is_selected && (ch = wgetch(optionwin))){
+    handleTriggerOptions(menu, ch);
+    if (menu.selected){
+        if (menu.selected_option == menu.num_options - 1){
+            is_selected = false;
+        }
+    }
+    drawMenuOptions(menu);
+}
+werase(optionwin);
+wrefresh(optionwin);
+reset();
