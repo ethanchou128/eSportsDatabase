@@ -58,7 +58,7 @@ public:
     void draw();
     void drawMenu(Menu menu, bool is_selected);
     void print_centered(WINDOW* win, int start_row, string text);
-    void drawMenuOptions(Menu menu);
+    void drawMenuOptions(Menu& menu);
 
     void handleTriggerMenu(int trigger);
     void handleTriggerOptions(Menu& menu, int trigger);
@@ -68,6 +68,8 @@ public:
     void printEntries(Database& database);
     void printEntries(const vector<Team>& vT);
     void printEntries(const Team& t);
+
+    void list
 };
 
 #endif
