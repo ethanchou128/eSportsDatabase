@@ -68,6 +68,8 @@ public:
     void addEntry(Menu& menu);
     void addMenu();
 
+    void listEntries(Menu& menu, vector<Team> vT);
+
     void printEntries(Database& database);
     void printEntries(const vector<Team>& vT);
     void printEntries(const Team& t);

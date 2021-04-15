@@ -251,6 +251,12 @@ void MenuOut::addEntry(Menu& menu) {
 
 }
 
+// void listEntries(Menu& menu, vector<Team> vT) {
+//     if(menu.selected_option == 6) {
+//         return;
+//     }
+// }
+
 void MenuOut::printEntries(Database& database){
     database.sort_by_name();
     printEntries(database.get_database());
