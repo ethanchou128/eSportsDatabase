@@ -53,6 +53,9 @@ float getNetWorth();
 
 // Delete:
 void deleteEntry(Database &database);
+void deleteByName(Database &database);
+void deleteByLocation(Database &database);
+void deleteByYearFounded(Database &database);
 
 // Listing:
 void listEntries(Database &database);
