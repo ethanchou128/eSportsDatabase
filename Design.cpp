@@ -102,10 +102,15 @@ void MenuOut::draw(){
                 if (menus[selected_menu].selected_option == menus[selected_menu].num_options - 1 
                     && menus[selected_menu].selected == true){
                     menus[selected_menu].selected = false;
+                    menus[selected_menu].selected_option = -1;
                     selected = false;
                 }
             }
+            if(menus[selected_menu].selected && menus[selected_menu].selected_option == 3){
+                
+            }
             drawMenuOptions(menus[selected_menu]);
+            menus[selected_menu].selected = false;
         }
         werase(optionwin);
         wrefresh(optionwin);
@@ -134,7 +139,7 @@ void MenuOut::print_centered(WINDOW* win, int start_row, string text){
     mvwprintw(win, start_row, adj, text.c_str());
 }
 
-void MenuOut::drawMenuOptions(Menu menu){
+void MenuOut::drawMenuOptions(Menu& menu){
     box(optionwin, 0, 0);
     int start = menu.start_x_options;
     int current_pos;
