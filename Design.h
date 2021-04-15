@@ -65,11 +65,13 @@ public:
     void selectNextMenu();
     void selectPreviousMenu();
 
+    void addEntry(const vector<Team>& vT);
+    void addMenu();
+
     void printEntries(Database& database);
     void printEntries(const vector<Team>& vT);
     void printEntries(const Team& t);
 
-    void list
 };
 
 #endif
