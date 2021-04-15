@@ -69,7 +69,7 @@ public:
     void printEntries(const vector<Team>& vT);
     void printEntries(const Team& t);
 
-    void list
+    
 };
 
 #endif
