@@ -11,9 +11,14 @@
 #include <algorithm>
 #include <vector>
 
-using namespace std;
+#define ctrl(x) (x & 0x1F)
 
-/////////////////Menu/////////////////////
+using namespace std;
+//------------------------------------------------------
+/**
+ * Menu Class
+ */
+//------------------------------------------------------
 Menu::Menu(string text, char trigger, string* options, char* options_trigger, int num_options){
     this->text = text;
     this->trigger = trigger;
@@ -24,6 +29,12 @@ Menu::Menu(string text, char trigger, string* options, char* options_trigger, in
     this->selected = false;
 }
 
+
+//------------------------------------------------------
+/**
+ * Used to change the selected sub-menu
+ */
+//------------------------------------------------------
 void Menu::selectNextOption(){
     selected_option++;
     if (selected_option >= num_options){
@@ -38,7 +49,12 @@ void Menu::selectPreviousOption(){
     }
 }
 
-////////////////MenuOut///////////////////
+
+//------------------------------------------------------
+/**
+ * MenuOut Class
+ */
+//------------------------------------------------------
 MenuOut::MenuOut(WINDOW* win, Menu* menus, int num_menus){
     this->win = win;
     this->menus = menus;
@@ -67,6 +83,14 @@ MenuOut::MenuOut(WINDOW* win, Menu* menus, int num_menus){
     }
 }
 
+
+//------------------------------------------------------
+/**
+ * Main drawing / output code
+ * It is responsible to print the menu bar and information
+ * about the menu and its options
+ */
+//------------------------------------------------------
 void MenuOut::reset(){
     werase(win);
     box(win, 0, 0);
@@ -129,14 +153,6 @@ void MenuOut::drawMenu(Menu menu, bool is_selected){
 
 }
 
-void MenuOut::print_centered(WINDOW* win, int start_row, string text){
-    int center = getmaxx(win) / 2;
-    int half = text.length() / 2;
-    int adj = center - half;
-
-    mvwprintw(win, start_row, adj, text.c_str());
-}
-
 void MenuOut::drawMenuOptions(Menu& menu){
     box(optionwin, 0, 0);
     int start = menu.start_x_options;
@@ -171,6 +187,14 @@ void MenuOut::drawMenuOptions(Menu& menu){
     }
 }
 
+//------------------------------------------------------
+/**
+ * Handles user inputs
+ * Is used to change selected menu as well as select the menu
+ * Removed ctrl+c break!!!
+ * Use ctrl+w to "exit", except for main menu
+ */
+//------------------------------------------------------
 void MenuOut::handleTriggerMenu(int trigger){
     if (trigger >= 10 && trigger <= 13){
         this->selected = true;
@@ -196,6 +220,10 @@ void MenuOut::handleTriggerMenu(int trigger){
 }
 
 void MenuOut::handleTriggerOptions(Menu& menu, int trigger){
+    if (trigger == ctrl('w')){
+        selected = false;
+    }
+
     if (trigger >= 10 && trigger <= 13){
         menu.selected = true;
         return;
@@ -220,6 +248,12 @@ void MenuOut::handleTriggerOptions(Menu& menu, int trigger){
     }
 }
 
+
+//------------------------------------------------------
+/**
+ * Used to change the selected main menu
+ */
+//------------------------------------------------------
 void MenuOut::selectNextMenu(){
     selected_menu++;
     if (selected_menu >= num_menus){
@@ -234,21 +268,19 @@ void MenuOut::selectPreviousMenu(){
     }
 }
 
-void MenuOut::addEntry(Menu& menu) {
-    if (menu.selected_option == 5){
-        return;
-    }
-    print_centered(optionwin, 2, "What is the name of your team?");
-    // wrefresh(optionwin);
-    // char str[80];
-    // getstr(str);
-    // print_centered(optionwin, 3, str);
-    int i = 4;
-    for(Team t : database.get_database()) {
-        print_centered(optionwin, i, t.get_full());
-        i++;
-    }
 
+//------------------------------------------------------
+/**
+ * Printing functions
+ * Use to properly format text in the window
+ */
+//------------------------------------------------------
+void MenuOut::print_centered(WINDOW* win, int start_row, string text){
+    int center = getmaxx(win) / 2;
+    int half = text.length() / 2;
+    int adj = center - half;
+
+    mvwprintw(win, start_row, adj, text.c_str());
 }
 
 void MenuOut::printEntries(Database& database){
@@ -297,8 +329,48 @@ void MenuOut::printEntries(const Team& t) {
 }
 
 
+//------------------------------------------------------
+/**
+ * Calls when user wants to add record
+ */
+//------------------------------------------------------
+void MenuOut::addEntry(Menu& menu) {
+    if (menu.selected_option == 5){
+        return;
+    }
+    print_centered(optionwin, 2, "What is the name of your team?");
+    // wrefresh(optionwin);
+    // char str[80];
+    // getstr(str);
+    // print_centered(optionwin, 3, str);
+    int i = 4;
+    for(Team t : database.get_database()) {
+        print_centered(optionwin, i, t.get_full());
+        i++;
+    }
+}
+
+//------------------------------------------------------
+/**
+ * Calls when user wants to delete record
+ */
+//------------------------------------------------------
+
+
+
+
+//------------------------------------------------------
+/**
+ * Calls when user wants to find record
+ */
+//------------------------------------------------------
 
 
 
 
 
+//------------------------------------------------------
+/**
+ * Calls when user wants to list record
+ */
+//------------------------------------------------------

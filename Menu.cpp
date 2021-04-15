@@ -20,7 +20,7 @@ void start(){
 
     initscr();
     noecho();
-    cbreak();
+    raw();
     curs_set(0);
 
     if (has_colors()){
