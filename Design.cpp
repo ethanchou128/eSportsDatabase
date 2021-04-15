@@ -69,7 +69,7 @@ void MenuOut::draw(){
         wrefresh(win);
         switch (selected_menu){
             case 0:
-                //hold 
+                //hold
                 break;
             case 1:
                 //hold
