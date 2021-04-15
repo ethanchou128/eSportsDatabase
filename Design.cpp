@@ -106,6 +106,7 @@ void MenuOut::draw(){
                     selected = false;
                 }
             }
+            
             if(menus[selected_menu].selected && menus[selected_menu].selected_option == 3){
                 
             }
@@ -215,6 +216,26 @@ void MenuOut::selectPreviousMenu(){
     if (selected_menu < 0){
         selected_menu = num_menus - 1;
     }
+}
+
+void MenuOut::addEntry(const vector<Team>& vT) {
+    print_centered(win, 2, "What is the name of your team?");
+    char str[80];
+    getstr(str);
+    print_centered(win, 3, str);
+    int i = 4;
+    for(Team t : vT) {
+        print_centered(win, i, t.get_full());
+        i++;
+    }
+
+}
+
+void MenuOut::addMenu() {
+    werase(win);
+    box(win, 0, 0);
+    wrefresh(win);
+    addEntry(database.get_database());
 }
 
 void MenuOut::printEntries(Database& database){
