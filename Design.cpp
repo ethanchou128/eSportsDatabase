@@ -106,9 +106,7 @@ void MenuOut::draw(){
                     selected = false;
                 }
             }
-            if(menus[selected_menu].selected && menus[selected_menu].selected_option == 3){
-                
-            }
+            
             drawMenuOptions(menus[selected_menu]);
             menus[selected_menu].selected = false;
         }
@@ -151,6 +149,25 @@ void MenuOut::drawMenuOptions(Menu& menu){
         mvwprintw(optionwin, 0, current_pos, menu.options[i].c_str());
         wattroff(optionwin, A_STANDOUT);
         wrefresh(optionwin);
+    }
+    if (selected){
+        switch (selected_menu){
+            case 0:
+                addEntry(menus[selected_menu]);
+                // adding
+                break;
+            case 1:
+                // deleting
+                break;
+            case 2:
+                // finding
+                break;
+            case 3:
+                // listing``
+                break;
+            default:
+                break;
+        }
     }
 }
 
@@ -215,6 +232,23 @@ void MenuOut::selectPreviousMenu(){
     if (selected_menu < 0){
         selected_menu = num_menus - 1;
     }
+}
+
+void MenuOut::addEntry(Menu& menu) {
+    if (menu.selected_option == 5){
+        return;
+    }
+    print_centered(optionwin, 2, "What is the name of your team?");
+    // wrefresh(optionwin);
+    // char str[80];
+    // getstr(str);
+    // print_centered(optionwin, 3, str);
+    int i = 4;
+    for(Team t : database.get_database()) {
+        print_centered(optionwin, i, t.get_full());
+        i++;
+    }
+
 }
 
 void MenuOut::printEntries(Database& database){
