@@ -14,9 +14,28 @@
 using namespace std;
 
 /////////////////Menu/////////////////////
-Menu::Menu(string text, char trigger){
+Menu::Menu(string text, char trigger, string* options, char* options_trigger, int num_options){
     this->text = text;
     this->trigger = trigger;
+    this->options = options;
+    this->options_trigger = options_trigger;
+    this->num_options = num_options;
+    this->selected_option = -1;
+    this->selected = false;
+}
+
+void Menu::selectNextOption(){
+    selected_option++;
+    if (selected_option >= num_options){
+        selected_option = 0;
+    }
+}
+
+void Menu::selectPreviousOption(){
+    selected_option--;
+    if (selected_option < 0){
+        selected_option = num_options - 1;
+    }
 }
 
 ////////////////MenuOut///////////////////
@@ -30,12 +49,21 @@ MenuOut::MenuOut(WINDOW* win, Menu* menus, int num_menus){
     Database database("database.txt");
     this->database = database;
 
-    int start = getmaxx(win) / 6;
+    int yMax, xMax, yBeg, xBeg;
+    getmaxyx(win, yMax, xMax);
+    getbegyx(win, yBeg, xBeg);
+    optionwin = newwin(yMax, xMax, yBeg, xBeg);
+    keypad(optionwin, true);
+    wrefresh(win);
+
+    int start = getmaxx(win) / (num_menus + 1);
     int current_pos;
 
     for (int i = 0; i < num_menus; i++){
+        int start_options = getmaxx(win) / (this->menus[i].num_options + 1);
         current_pos = start + (start * i) - this->menus[i].text.length()/2;
-        this->menus[i].start_x = current_pos;
+        this->menus[i].start_x_menu = current_pos;
+        this->menus[i].start_x_options = start_options;
     }
 }
 
@@ -44,7 +72,7 @@ void MenuOut::reset(){
     box(win, 0, 0);
     wrefresh(win);
     for (int i = 0; i < num_menus; i++){
-        int start_x = this->menus[i].start_x;
+        int start_x = this->menus[i].start_x_menu;
         string text = this->menus[i].text;
         mvwprintw(win, 0, start_x, text.c_str());
     }
@@ -59,14 +87,16 @@ void MenuOut::reset(){
 
 void MenuOut::draw(){
     if (!selected){
-        reset();
         for (int i = 0; i < num_menus; i++){
             drawMenu(menus[i], selected_menu == i);
         }
+    } else if (selected && selected_menu == num_menus - 1){
+        run = false;
     } else {
-        werase(win);
-        box(win, 0, 0);
+        int ch;
+        drawMenuOptions(menus[selected_menu]);
         wrefresh(win);
+<<<<<<< HEAD
         switch (selected_menu){
             case 0:
                 //hold
@@ -83,13 +113,28 @@ void MenuOut::draw(){
             case 4:
                 run = false;
                 break;
+=======
+        while(selected && (ch = wgetch(optionwin))){
+            handleTriggerOptions(menus[selected_menu], ch);
+            if (menus[selected_menu].selected){
+                if (menus[selected_menu].selected_option == menus[selected_menu].num_options - 1 
+                    && menus[selected_menu].selected == true){
+                    menus[selected_menu].selected = false;
+                    selected = false;
+                }
+            }
+            drawMenuOptions(menus[selected_menu]);
+>>>>>>> 69df730d5158ddfa99538fa33d2163c79a40584d
         }
+        werase(optionwin);
+        wrefresh(optionwin);
+        reset();
         selected = false;
     }
 }
 
 void MenuOut::drawMenu(Menu menu, bool is_selected){
-    int start_x = menu.start_x;
+    int start_x = menu.start_x_menu;
     string text = menu.text;
     if (is_selected){
         wattron(win, A_STANDOUT);
@@ -97,6 +142,7 @@ void MenuOut::drawMenu(Menu menu, bool is_selected){
     mvwprintw(win, 0, start_x, text.c_str());
     wattroff(win, A_STANDOUT);
     wrefresh(win);
+
 }
 
 void MenuOut::print_centered(WINDOW* win, int start_row, string text){
@@ -107,9 +153,24 @@ void MenuOut::print_centered(WINDOW* win, int start_row, string text){
     mvwprintw(win, start_row, adj, text.c_str());
 }
 
+void MenuOut::drawMenuOptions(Menu menu){
+    box(optionwin, 0, 0);
+    int start = menu.start_x_options;
+    int current_pos;
+    for (int i = 0; i < menu.num_options; i++){
+        if (menu.selected_option == i){
+            wattron(optionwin, A_STANDOUT);
+        }
+        current_pos = start + (start * i) - menu.options[i].length() / 2;
+        mvwprintw(optionwin, 0, current_pos, menu.options[i].c_str());
+        wattroff(optionwin, A_STANDOUT);
+        wrefresh(optionwin);
+    }
+}
+
 void MenuOut::handleTriggerMenu(int trigger){
     if (trigger >= 10 && trigger <= 13){
-        selected = true;
+        this->selected = true;
         return;
     }
     switch (trigger){
@@ -127,6 +188,31 @@ void MenuOut::handleTriggerMenu(int trigger){
     for (int i = 0; i < num_menus; i++){
         if (trigger == this->menus[i].trigger){
             selected_menu = i;
+        }
+    }
+}
+
+void MenuOut::handleTriggerOptions(Menu& menu, int trigger){
+    if (trigger >= 10 && trigger <= 13){
+        menu.selected = true;
+        return;
+    }
+
+    switch (trigger){
+        case KEY_RIGHT:
+            menu.selectNextOption();
+            break;
+        case KEY_LEFT:
+            menu.selectPreviousOption();
+            break;
+        default:
+            menu.selected_option = -1;
+            break;
+    }
+
+    for (int i = 0; i < menu.num_options; i++){
+        if (trigger == menu.options_trigger[i]){
+            menu.selected_option = i;
         }
     }
 }

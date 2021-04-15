@@ -36,13 +36,28 @@ void start(){
     WINDOW* win = newwin(yMax*3/4, xMax*3/4, yMax/8, xMax/8);
     keypad(win, true);
     box(win,0,0);
+
+    string options1[] = {"Return"};
+    char options_trigger1[] = {'r'};
+
+    string options2[] = {"Name", "Year", "Return"};
+    char options_trigger2[] = {'n', 'y', 'r'};
+
+    string options3[] = {"Name", "Game", "Location", "Date", "Return"};
+    char options_trigger3[] = {'n', 'g', 'l', 'd', 'r'};
+
+    string options4[] = {"Name", "Location", "Net Worth", "Year", "Return"};
+    char options_trigger4[] = {'n', 'l', 'w', 'y', 'r'};
+
+    string options5[] = {};
+    char options_trigger5[] = {};
     
     Menu menus[5] = {
-        Menu("Add", 'a'),
-        Menu("Delete", 'd'), 
-        Menu("Find", 'f'),
-        Menu("List", 'l'),
-        Menu("Quit", 'q')
+        Menu("Add", 'a', options1, options_trigger1, 1),
+        Menu("Delete", 'd', options2, options_trigger2, 3), 
+        Menu("Find", 'f', options3, options_trigger3, 5),
+        Menu("List", 'l', options4, options_trigger4, 5),
+        Menu("Quit", 'q', options5, options_trigger5, 0)
     };
 
     MenuOut menuout = MenuOut(win, menus, 5);
