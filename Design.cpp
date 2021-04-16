@@ -415,16 +415,53 @@ void MenuOut::addEntry(Menu& menu) {
     if (menu.selected_option == 5){
         return;
     }
+    echo();
+    curs_set(1);
+    Team temp;
     print_centered(optionwin, 2, "What is the name of your team?");
-    // wrefresh(optionwin);
-    // char str[80];
-    // getstr(str);
-    // print_centered(optionwin, 3, str);
-    int i = 4;
-    for(Team t : database.get_database()) {
-        print_centered(optionwin, i, t.get_full());
-        i++;
-    }
+    int center = getmaxx(optionwin) / 2;
+    wmove(optionwin, 3, center - 10);
+    char fullStr[20];
+    wgetnstr(optionwin, fullStr, 20);
+    string fstr(fullStr);
+    fstr = cmpt::clean(fstr);
+    temp.set_full(fstr);
+    print_centered(optionwin, 4, "What's your team's short name?");
+    wmove(optionwin, 5, center - 10);
+    char shortStr[20];
+    wgetnstr(optionwin, shortStr, 20);
+    string sstr(shortStr);
+    sstr = cmpt::clean(sstr);
+    temp.set_short(sstr);
+    print_centered(optionwin, 6, "Where is your team headquartered?");
+    wmove(optionwin, 7, center - 10);
+    char locationStr[20];
+    wgetnstr(optionwin, locationStr, 20);
+    string lstr(locationStr);
+    lstr = cmpt::clean(lstr);
+    temp.set_location(lstr);
+    print_centered(optionwin, 8, "What year was your team founded?");
+    wmove(optionwin, 9, center - 10);
+    char yearStr[20];
+    wgetnstr(optionwin, yearStr, 20);
+    string ystr(yearStr);
+    ystr = cmpt::clean(ystr);
+    int year = stoi(ystr);
+    temp.set_dateFounded(year);
+    print_centered(optionwin, 10, "What's your team's net worth, in millions of dollars?");
+    wmove(optionwin, 11, center - 10);
+    char netWorthStr[20];
+    wgetnstr(optionwin, netWorthStr, 20);
+    string nstr(netWorthStr);
+    nstr = cmpt::clean(nstr);
+    float netWorth = stof(nstr);
+    temp.set_netWorth(netWorth);
+    noecho();
+    curs_set(0);
+    menu.selected = false;
+    menureset(menu);
+    return;
+
 }
 
 //------------------------------------------------------
@@ -443,7 +480,7 @@ void MenuOut::addEntry(Menu& menu) {
 //------------------------------------------------------
 void MenuOut::findMenu(Menu& menu){
     if (!menu.selected && menu.selected_option == -1){
-        string msg = "Here you can seach records based on chooen field";
+        string msg = "Here you can seach records based on chosen field";
         print_centered(optionwin, 2, msg.c_str());
         msg = "You can exit this menu by selecting 'quit' or by pressing 'ctrl+w'";
         print_centered(optionwin, 3, msg.c_str());
