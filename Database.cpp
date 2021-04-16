@@ -42,7 +42,10 @@ vector<Team> Database::get_by_name(string s) const{
     vector<Team> hold;
     for (Team t : database){
         string full = t.get_full();
-        if (t.get_full().find(s) != string::npos || t.get_short().find(s) != string::npos){
+        full = cmpt::clean(full);
+        string nick = t.get_short();
+        nick = cmpt::clean(nick);
+        if (full.find(s) != string::npos || nick.find(s) != string::npos){
             hold.push_back(t);
         }
         
@@ -67,7 +70,9 @@ vector<Team> Database::get_by_game(string s) const{
 vector<Team> Database::get_by_location(string s) const{
     vector<Team> hold;
     for (Team t : database){
-        if (t.get_location().find(s) != string::npos){
+        string loc = t.get_location();
+        loc = cmpt::clean(loc);
+        if (loc.find(s) != string::npos){
             hold.push_back(t);
         }
     }

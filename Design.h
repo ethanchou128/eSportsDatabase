@@ -67,6 +67,7 @@ public:
 
     /* Main Drawing */
     void reset();
+    void menureset(Menu& menu);
     void drawMenu(Menu menu, bool is_selected);
     void print_centered(WINDOW* win, int start_row, string text);
     void drawMenuOptions(Menu& menu);
@@ -87,6 +88,7 @@ public:
     /* Deleting */
 
     /* Finding */
+    void findMenu(Menu& menu);
 
     /* Listing */
     void listMenu(Menu& menu);
