@@ -73,6 +73,7 @@ MenuOut::MenuOut(WINDOW* win, Menu* menus, int num_menus){
     this->run = true;
     Database database("database.txt");
     this->database = database;
+    database.sort_by_name();
 
     int yMax, xMax, yBeg, xBeg;
     getmaxyx(win, yMax, xMax);
@@ -114,6 +115,31 @@ void MenuOut::reset(){
     print_centered(win, 5, "Press enter once you have selected an option");
 
     wrefresh(win);
+}
+
+void MenuOut::menureset(Menu& menu){
+    box(optionwin, 0, 0);
+    int start = menu.start_x_options;
+    int current_pos;
+    for (int i = 0; i < menu.num_options; i++){
+        if (menu.selected_option == i){
+            if (selected_menu == 2 && menu.selected){
+                wattron(optionwin, A_BLINK);
+            } 
+            wattron(optionwin, A_STANDOUT);
+            
+        }
+        if ((menu.options[i] == "Reversed") && menu.reversed){
+            init_pair(2, COLOR_CYAN, COLOR_WHITE);
+            wattron(optionwin, COLOR_PAIR(2));
+        }
+        current_pos = start + (start * i) - menu.options[i].length() / 2;
+        mvwprintw(optionwin, 0, current_pos, menu.options[i].c_str());
+        wattroff(optionwin, A_STANDOUT);
+        wattroff(optionwin, COLOR_PAIR(2));
+        wattroff(optionwin, A_BLINK);
+        wrefresh(optionwin);
+    }
 }
 
 void MenuOut::draw(){
@@ -172,7 +198,11 @@ void MenuOut::drawMenuOptions(Menu& menu){
     int current_pos;
     for (int i = 0; i < menu.num_options; i++){
         if (menu.selected_option == i){
+            if (selected_menu == 2 && menu.selected){
+                wattron(optionwin, A_BLINK);
+            } 
             wattron(optionwin, A_STANDOUT);
+            
         }
         if ((menu.options[i] == "Reversed") && menu.reversed){
             init_pair(2, COLOR_CYAN, COLOR_WHITE);
@@ -182,6 +212,7 @@ void MenuOut::drawMenuOptions(Menu& menu){
         mvwprintw(optionwin, 0, current_pos, menu.options[i].c_str());
         wattroff(optionwin, A_STANDOUT);
         wattroff(optionwin, COLOR_PAIR(2));
+        wattroff(optionwin, A_BLINK);
         wrefresh(optionwin);
     }
     if (selected){
@@ -195,6 +226,7 @@ void MenuOut::drawMenuOptions(Menu& menu){
                 break;
             case 2:
                 // finding
+                findMenu(menus[selected_menu]);
                 break;
             case 3:
                 // listing
@@ -242,6 +274,18 @@ void MenuOut::handleTriggerMenu(int trigger){
 void MenuOut::handleTriggerOptions(Menu& menu, int trigger){
     if (trigger == ctrl('w')){
         selected = false;
+    }
+
+    if (trigger == ctrl('r') && this->selected_menu == 3){
+        if (menu.reversed == true){
+            menu.reversed = false;
+        } else {
+            menu.reversed = true;
+        }
+        if (menu.selected_option != menu.num_options - 1){
+            menu.selected = true;
+        }
+        return;
     }
     
     if (trigger >= 10 && trigger <= 13){
@@ -397,7 +441,99 @@ void MenuOut::addEntry(Menu& menu) {
  * Calls when user wants to find record
  */
 //------------------------------------------------------
+void MenuOut::findMenu(Menu& menu){
+    if (!menu.selected && menu.selected_option == -1){
+        string msg = "Here you can seach records based on chooen field";
+        print_centered(optionwin, 2, msg.c_str());
+        msg = "You can exit this menu by selecting 'quit' or by pressing 'ctrl+w'";
+        print_centered(optionwin, 3, msg.c_str());
+        msg = "work in progress";
+        print_centered(optionwin, 4, msg.c_str());
+        
+    } else if (menu.selected){
+        echo();
+        curs_set(1);
+        switch (menu.selected_option){
+            case 0: {
 
+                print_centered(optionwin, 3, "What is the name of the team?");
+
+                int center = getmaxx(optionwin) / 2;
+                wmove(optionwin, 4, center - 10);
+                char str[20];
+                wgetnstr(optionwin, str, 20);
+                string sstr(str);
+                sstr = cmpt::clean(sstr);
+                print_centered(optionwin, 5, "Teams:");
+                print_centered(optionwin, 6, "--------");
+                int i = 7;
+                for (Team t : database.get_by_name(sstr)){
+                    print_centered(optionwin, i, t.get_full().c_str());
+                    i++;
+                }
+                break;
+            }
+            case 1: {
+                print_centered(optionwin, 3, "What is the games does your team play?");
+
+                int center = getmaxx(optionwin) / 2;
+                wmove(optionwin, 4, center - 10);
+                char str[20];
+                wgetnstr(optionwin, str, 20);
+                string sstr(str);
+                sstr = cmpt::clean(sstr);
+                print_centered(optionwin, 5, "Teams:");
+                print_centered(optionwin, 6, "--------");
+                int i = 7;
+                for (Team t : database.get_by_game(sstr)){
+                    print_centered(optionwin, i, t.get_full().c_str());
+                    i++;
+                }
+                break;
+            }
+            case 2: {
+                print_centered(optionwin, 3, "Where is your team located (country)?");
+
+                int center = getmaxx(optionwin) / 2;
+                wmove(optionwin, 4, center - 10);
+                char str[20];
+                wgetnstr(optionwin, str, 20);
+                string sstr(str);
+                sstr = cmpt::clean(sstr);
+                print_centered(optionwin, 5, "Teams:");
+                print_centered(optionwin, 6, "--------");
+                int i = 7;
+                for (Team t : database.get_by_location(sstr)){
+                    print_centered(optionwin, i, t.get_full().c_str());
+                    i++;
+                }
+                break;
+            }
+            case 3: {
+                print_centered(optionwin, 3, "When was your team founded?");
+
+                int center = getmaxx(optionwin) / 2;
+                wmove(optionwin, 4, center - 10);
+                char str[20];
+                wgetnstr(optionwin, str, 20);
+                string sstr(str);
+                sstr = cmpt::clean(sstr);
+                print_centered(optionwin, 5, "Teams:");
+                print_centered(optionwin, 6, "--------");
+                int i = 7;
+                for (Team t : database.get_by_dateFounded(stoi(sstr))){
+                    print_centered(optionwin, i, t.get_full().c_str());
+                    i++;
+                }
+                break;
+            }
+        }
+        noecho();
+        curs_set(0);
+        menu.selected = false;
+        menureset(menu);
+    }
+}
 
 
 
@@ -414,82 +550,87 @@ void MenuOut::listMenu(Menu& menu){
         msg = "You can exit this menu by selecting 'quit' or by pressing 'ctrl+w'";
         print_centered(optionwin, 3, msg.c_str());
         msg = "The 'Reversed' option is a toggle.";
-        msg.append(" When it is highlighted, options will be sored in reverse!");
         print_centered(optionwin, 4, msg.c_str());
+        msg = "When it is highlighted, options will be sored in reverse!";
+        print_centered(optionwin, 5, msg.c_str());
+        msg = "Pressing 'ctrl+r' will toggle reversed without having to select it!";
+        print_centered(optionwin, 6, msg.c_str());
     } else if (menu.selected){
-        
         switch (menu.selected_option){
             case 0: {
-                    string msg = "Reversed has been toggled! Selecting options will be sorted according";
-                    print_centered(optionwin, 3, msg.c_str());
-                    break;
-                }
+                string msg = "Reversed has been toggled!";
+                print_centered(optionwin, 3, msg.c_str());
+                msg = " Selecting options will be sorted according";
+                print_centered(optionwin, 4, msg.c_str());
+                break;
+            }
             case 1: {
-                    int start = 2;
-                    if (menu.reversed){
-                        database.sort_by_revname();
-                    } else {
-                        database.sort_by_name();
-                    }
-                    for (int i = 0; i < database.get_size(); i++){
-                        print_centered(optionwin, start + i, 
-                        database.get_database().at(i).get_full().c_str());
-                    }
+                int start = 2;
+                if (menu.reversed){
+                    database.sort_by_revname();
+                } else {
+                    database.sort_by_name();
+                }
+                for (int i = 0; i < database.get_size(); i++){
+                    print_centered(optionwin, start + i, 
+                    database.get_database().at(i).get_full().c_str());
                 }
                 break;
+            }
             case 2:{
-                    int start = 2;
-                    if (menu.reversed){
-                        database.sort_by_revlocation();
-                    } else {
-                        database.sort_by_location();
-                    }
+                int start = 2;
+                if (menu.reversed){
+                    database.sort_by_revlocation();
+                } else {
+                    database.sort_by_location();
+                }
 
-                    for (int i = 0; i < database.get_size(); i++){
-                        string format = database.get_database().at(i).get_full() + " -  "; 
-                        format.append(database.get_database().at(i).get_location());
-                        print_centered(optionwin, start + i, format);
-                        
-                    }
+                for (int i = 0; i < database.get_size(); i++){
+                    string format = database.get_database().at(i).get_full() + " -  "; 
+                    format.append(database.get_database().at(i).get_location());
+                    print_centered(optionwin, start + i, format);
+                    
                 }
                 break;
+            }
             case 3:{
-                    int start = 2;
-                    if (menu.reversed){
-                        database.sort_by_revnetWorth();
-                    } else {
-                        database.sort_by_netWorth();
-                    }
+                int start = 2;
+                if (menu.reversed){
+                    database.sort_by_revnetWorth();
+                } else {
+                    database.sort_by_netWorth();
+                }
 
-                    for (int i = 0; i < database.get_size(); i++){
-                        string format = database.get_database().at(i).get_full() + " -  $"; 
-                        format.append("%.2f");
-                        format.append(" million");
-                        int center = getmaxx(optionwin) / 2;
-                        int half = format.length() / 2;
-                        int adj = center - half;
-                        mvwprintw(optionwin, start + i, adj, format.c_str(), 
-                        database.get_database().at(i).get_netWorth());
-                        
-                    }
+                for (int i = 0; i < database.get_size(); i++){
+                    string format = database.get_database().at(i).get_full() + " -  $"; 
+                    format.append("%.2f");
+                    format.append(" million");
+                    int center = getmaxx(optionwin) / 2;
+                    int half = format.length() / 2;
+                    int adj = center - half;
+                    mvwprintw(optionwin, start + i, adj, format.c_str(), 
+                    database.get_database().at(i).get_netWorth());
+                    
                 }
                 break;
+            }
             case 4:{
-                    int start = 2;
-                    if (menu.reversed){
-                        database.sort_by_revyearFounded();
-                    } else {
-                        database.sort_by_yearFounded();
-                    }
+                int start = 2;
+                if (menu.reversed){
+                    database.sort_by_revyearFounded();
+                } else {
+                    database.sort_by_yearFounded();
+                }
 
-                    for (int i = 0; i < database.get_size(); i++){
-                        string format = database.get_database().at(i).get_full() + " -   Est. "; 
-                        format.append(to_string(database.get_database().at(i).get_dateFounded()));
-                        print_centered(optionwin, start + i, format);
-                        
-                    }
+                for (int i = 0; i < database.get_size(); i++){
+                    string format = database.get_database().at(i).get_full() + " -   Est. "; 
+                    format.append(to_string(database.get_database().at(i).get_dateFounded()));
+                    print_centered(optionwin, start + i, format);
+                    
                 }
                 break;
+            }
         }
     }
+    database.sort_by_name();
 }

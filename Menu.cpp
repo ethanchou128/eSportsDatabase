@@ -441,7 +441,7 @@ void deleteEntry(Database &database) {
         if (input == "n"){
             deleteByName(database);
         } else if (input == "l"){
-           deleteByLocation(database);
+            deleteByLocation(database);
         } else if (input == "y"){
             deleteByYearFounded(database);
         } else if (input == "r"){ 
