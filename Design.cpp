@@ -11,10 +11,17 @@
 #include <algorithm>
 #include <vector>
 
-using namespace std;
+#define ctrl(x) (x & 0x1F)
 
-/////////////////Menu/////////////////////
-Menu::Menu(string text, char trigger, string* options, char* options_trigger, int num_options){
+using namespace std;
+//------------------------------------------------------
+/**
+ * Menu Class
+ */
+//------------------------------------------------------
+Menu::Menu(string text, char trigger, string* options, char* options_trigger, int num_options)
+{
+    
     this->text = text;
     this->trigger = trigger;
     this->options = options;
@@ -22,8 +29,21 @@ Menu::Menu(string text, char trigger, string* options, char* options_trigger, in
     this->num_options = num_options;
     this->selected_option = -1;
     this->selected = false;
+    this->reversed = false;
+    
+    // for (int i = 0; i < num_options; i++){
+    //     this->reversed.push_back(0);
+    // }
 }
 
+
+
+
+//------------------------------------------------------
+/**
+ * Used to change the selected sub-menu
+ */
+//------------------------------------------------------
 void Menu::selectNextOption(){
     selected_option++;
     if (selected_option >= num_options){
@@ -38,7 +58,12 @@ void Menu::selectPreviousOption(){
     }
 }
 
-////////////////MenuOut///////////////////
+
+//------------------------------------------------------
+/**
+ * MenuOut Class
+ */
+//------------------------------------------------------
 MenuOut::MenuOut(WINDOW* win, Menu* menus, int num_menus){
     this->win = win;
     this->menus = menus;
@@ -67,14 +92,20 @@ MenuOut::MenuOut(WINDOW* win, Menu* menus, int num_menus){
     }
 }
 
+
+//------------------------------------------------------
+/**
+ * Main drawing / output code
+ * It is responsible to print the menu bar and information
+ * about the menu and its options
+ */
+//------------------------------------------------------
 void MenuOut::reset(){
     werase(win);
     box(win, 0, 0);
     wrefresh(win);
     for (int i = 0; i < num_menus; i++){
-        int start_x = this->menus[i].start_x_menu;
-        string text = this->menus[i].text;
-        mvwprintw(win, 0, start_x, text.c_str());
+        drawMenu(menus[i], selected_menu == i);
     }
     
     print_centered(win, 2, "Welcome to Justin and Ethan's Database of Esports Teams");
@@ -97,6 +128,7 @@ void MenuOut::draw(){
         drawMenuOptions(menus[selected_menu]);
         wrefresh(win);
         while(selected && (ch = wgetch(optionwin))){
+
             handleTriggerOptions(menus[selected_menu], ch);
             if (menus[selected_menu].selected){
                 if (menus[selected_menu].selected_option == menus[selected_menu].num_options - 1 
@@ -106,10 +138,15 @@ void MenuOut::draw(){
                     selected = false;
                 }
             }
-            
+
+            if(menus[selected_menu].selected || menus[selected_menu].selected_option == -1){
+                wclear(optionwin);
+                wrefresh(optionwin);
+            }
             drawMenuOptions(menus[selected_menu]);
             menus[selected_menu].selected = false;
         }
+        menus[selected_menu].reversed = false;
         werase(optionwin);
         wrefresh(optionwin);
         reset();
@@ -129,14 +166,6 @@ void MenuOut::drawMenu(Menu menu, bool is_selected){
 
 }
 
-void MenuOut::print_centered(WINDOW* win, int start_row, string text){
-    int center = getmaxx(win) / 2;
-    int half = text.length() / 2;
-    int adj = center - half;
-
-    mvwprintw(win, start_row, adj, text.c_str());
-}
-
 void MenuOut::drawMenuOptions(Menu& menu){
     box(optionwin, 0, 0);
     int start = menu.start_x_options;
@@ -145,9 +174,14 @@ void MenuOut::drawMenuOptions(Menu& menu){
         if (menu.selected_option == i){
             wattron(optionwin, A_STANDOUT);
         }
+        if ((menu.options[i] == "Reversed") && menu.reversed){
+            init_pair(2, COLOR_CYAN, COLOR_WHITE);
+            wattron(optionwin, COLOR_PAIR(2));
+        }
         current_pos = start + (start * i) - menu.options[i].length() / 2;
         mvwprintw(optionwin, 0, current_pos, menu.options[i].c_str());
         wattroff(optionwin, A_STANDOUT);
+        wattroff(optionwin, COLOR_PAIR(2));
         wrefresh(optionwin);
     }
     if (selected){
@@ -163,14 +197,24 @@ void MenuOut::drawMenuOptions(Menu& menu){
                 // finding
                 break;
             case 3:
-                // listing``
+                // listing
+                listMenu(menus[selected_menu]);
                 break;
             default:
                 break;
         }
     }
+    
 }
 
+//------------------------------------------------------
+/**
+ * Handles user inputs
+ * Is used to change selected menu as well as select the menu
+ * Removed ctrl+c break!!!
+ * Use ctrl+w to "exit", except for main menu
+ */
+//------------------------------------------------------
 void MenuOut::handleTriggerMenu(int trigger){
     if (trigger >= 10 && trigger <= 13){
         this->selected = true;
@@ -196,7 +240,18 @@ void MenuOut::handleTriggerMenu(int trigger){
 }
 
 void MenuOut::handleTriggerOptions(Menu& menu, int trigger){
+    if (trigger == ctrl('w')){
+        selected = false;
+    }
+    
     if (trigger >= 10 && trigger <= 13){
+        if (menu.options[0] == "Reversed" && menu.selected_option == 0){
+            if (menu.reversed == true){
+                menu.reversed = false;
+            } else {
+                menu.reversed = true;
+            }
+        }
         menu.selected = true;
         return;
     }
@@ -220,6 +275,12 @@ void MenuOut::handleTriggerOptions(Menu& menu, int trigger){
     }
 }
 
+
+//------------------------------------------------------
+/**
+ * Used to change the selected main menu
+ */
+//------------------------------------------------------
 void MenuOut::selectNextMenu(){
     selected_menu++;
     if (selected_menu >= num_menus){
@@ -234,21 +295,19 @@ void MenuOut::selectPreviousMenu(){
     }
 }
 
-void MenuOut::addEntry(Menu& menu) {
-    if (menu.selected_option == 5){
-        return;
-    }
-    print_centered(optionwin, 2, "What is the name of your team?");
-    // wrefresh(optionwin);
-    // char str[80];
-    // getstr(str);
-    // print_centered(optionwin, 3, str);
-    int i = 4;
-    for(Team t : database.get_database()) {
-        print_centered(optionwin, i, t.get_full());
-        i++;
-    }
 
+//------------------------------------------------------
+/**
+ * Printing functions
+ * Use to properly format text in the window
+ */
+//------------------------------------------------------
+void MenuOut::print_centered(WINDOW* win, int start_row, string text){
+    int center = getmaxx(win) / 2;
+    int half = text.length() / 2;
+    int adj = center - half;
+
+    mvwprintw(win, start_row, adj, text.c_str());
 }
 
 // void listEntries(Menu& menu, vector<Team> vT) {
@@ -303,8 +362,134 @@ void MenuOut::printEntries(const Team& t) {
 }
 
 
+//------------------------------------------------------
+/**
+ * Calls when user wants to add record
+ */
+//------------------------------------------------------
+void MenuOut::addEntry(Menu& menu) {
+    if (menu.selected_option == 5){
+        return;
+    }
+    print_centered(optionwin, 2, "What is the name of your team?");
+    // wrefresh(optionwin);
+    // char str[80];
+    // getstr(str);
+    // print_centered(optionwin, 3, str);
+    int i = 4;
+    for(Team t : database.get_database()) {
+        print_centered(optionwin, i, t.get_full());
+        i++;
+    }
+}
+
+//------------------------------------------------------
+/**
+ * Calls when user wants to delete record
+ */
+//------------------------------------------------------
+
+
+
+
+//------------------------------------------------------
+/**
+ * Calls when user wants to find record
+ */
+//------------------------------------------------------
 
 
 
 
 
+//------------------------------------------------------
+/**
+ * Calls when user wants to list record
+ */
+//------------------------------------------------------
+void MenuOut::listMenu(Menu& menu){
+    if (!menu.selected && menu.selected_option == -1){
+        string msg = "Here you can list all the records";
+        print_centered(optionwin, 2, msg.c_str());
+        msg = "You can exit this menu by selecting 'quit' or by pressing 'ctrl+w'";
+        print_centered(optionwin, 3, msg.c_str());
+        msg = "The 'Reversed' option is a toggle.";
+        msg.append(" When it is highlighted, options will be sored in reverse!");
+        print_centered(optionwin, 4, msg.c_str());
+    } else if (menu.selected){
+        
+        switch (menu.selected_option){
+            case 0: {
+                    string msg = "Reversed has been toggled! Selecting options will be sorted according";
+                    print_centered(optionwin, 3, msg.c_str());
+                    break;
+                }
+            case 1: {
+                    int start = 2;
+                    if (menu.reversed){
+                        database.sort_by_revname();
+                    } else {
+                        database.sort_by_name();
+                    }
+                    for (int i = 0; i < database.get_size(); i++){
+                        print_centered(optionwin, start + i, 
+                        database.get_database().at(i).get_full().c_str());
+                    }
+                }
+                break;
+            case 2:{
+                    int start = 2;
+                    if (menu.reversed){
+                        database.sort_by_revlocation();
+                    } else {
+                        database.sort_by_location();
+                    }
+
+                    for (int i = 0; i < database.get_size(); i++){
+                        string format = database.get_database().at(i).get_full() + " -  "; 
+                        format.append(database.get_database().at(i).get_location());
+                        print_centered(optionwin, start + i, format);
+                        
+                    }
+                }
+                break;
+            case 3:{
+                    int start = 2;
+                    if (menu.reversed){
+                        database.sort_by_revnetWorth();
+                    } else {
+                        database.sort_by_netWorth();
+                    }
+
+                    for (int i = 0; i < database.get_size(); i++){
+                        string format = database.get_database().at(i).get_full() + " -  $"; 
+                        format.append("%.2f");
+                        format.append(" million");
+                        int center = getmaxx(optionwin) / 2;
+                        int half = format.length() / 2;
+                        int adj = center - half;
+                        mvwprintw(optionwin, start + i, adj, format.c_str(), 
+                        database.get_database().at(i).get_netWorth());
+                        
+                    }
+                }
+                break;
+            case 4:{
+                    int start = 2;
+                    if (menu.reversed){
+                        database.sort_by_revyearFounded();
+                    } else {
+                        database.sort_by_yearFounded();
+                    }
+
+                    for (int i = 0; i < database.get_size(); i++){
+                        string format = database.get_database().at(i).get_full() + " -   Est. "; 
+                        format.append(to_string(database.get_database().at(i).get_dateFounded()));
+                        print_centered(optionwin, start + i, format);
+                        
+                    }
+                }
+                break;
+        }
+    }
+}

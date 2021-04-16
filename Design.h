@@ -19,12 +19,12 @@ using namespace std;
 class Menu {
 
 public:
-
+    /* Main Menu System */
     int start_x_menu;
     string text;
     char trigger;
     
-
+    /* Sub-Menu Systems */
     Menu(string text, char trigger, string* options, char* options_trigger, int num_options);
 
     int start_x_options;
@@ -33,16 +33,22 @@ public:
     int num_options;
     bool selected;
     int selected_option;
+    bool reversed;
+    
 
     void selectNextOption();
     void selectPreviousOption();
+
 
 };
 
 class MenuOut{
 
 public:
+    /* Sub-Menu Systems */
     WINDOW* optionwin;
+
+    /* Main Menu system */
     WINDOW* win;
     Menu* menus;
     int num_menus;
@@ -53,28 +59,39 @@ public:
     
 
     MenuOut(WINDOW* win, Menu* menus, int num_menus);
-
-    void reset();
+    
+    /* Higher Order Function */
+    // Called in Menu
     void draw();
+    void handleTriggerMenu(int trigger);
+
+    /* Main Drawing */
+    void reset();
     void drawMenu(Menu menu, bool is_selected);
     void print_centered(WINDOW* win, int start_row, string text);
     void drawMenuOptions(Menu& menu);
 
-    void handleTriggerMenu(int trigger);
+    /* User Input Handle */
     void handleTriggerOptions(Menu& menu, int trigger);
     void selectNextMenu();
     void selectPreviousMenu();
 
-    void addEntry(Menu& menu);
-    void addMenu();
-
-    void listEntries(Menu& menu, vector<Team> vT);
-
+    /* Printing */
     void printEntries(Database& database);
     void printEntries(const vector<Team>& vT);
     void printEntries(const Team& t);
 
-    
+    /* Adding */
+    void addEntry(Menu& menu);
+
+    /* Deleting */
+
+    /* Finding */
+
+    /* Listing */
+    void listMenu(Menu& menu);
+
+
 };
 
 #endif

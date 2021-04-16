@@ -15,12 +15,15 @@
 
 using namespace std;
 
+#define ctrl(x) (x & 0x1F)
+
 //////////////////////////ncurses///////////////////////
 
 void start(){
 
     initscr();
     noecho();
+    raw();
     cbreak();
     curs_set(0);
 
@@ -34,7 +37,7 @@ void start(){
     int yMax, xMax;
     getmaxyx(stdscr, yMax, xMax);
 
-    WINDOW* win = newwin(yMax*3/4, xMax*3/4, yMax/8, xMax/8);
+    WINDOW* win = newwin(yMax*9/10, xMax*9/10, yMax/15, xMax/15);
     keypad(win, true);
     box(win,0,0);
 
@@ -47,8 +50,8 @@ void start(){
     string options3[] = {"Name", "Game", "Location", "Date", "Return"};
     char options_trigger3[] = {'n', 'g', 'l', 'd', 'r'};
 
-    string options4[] = {"Name", "Location", "Net Worth", "Year", "Return"};
-    char options_trigger4[] = {'n', 'l', 'w', 'y', 'r'};
+    string options4[] = {"Reversed", "Name", "Location", "Net Worth", "Year", "Return"};
+    char options_trigger4[] = {ctrl('r'),'n', 'l', 'w', 'y', 'r'};
 
     string options5[] = {};
     char options_trigger5[] = {};
@@ -57,7 +60,7 @@ void start(){
         Menu("Add", 'a', options1, options_trigger1, 1),
         Menu("Delete", 'd', options2, options_trigger2, 3), 
         Menu("Find", 'f', options3, options_trigger3, 5),
-        Menu("List", 'l', options4, options_trigger4, 5),
+        Menu("List", 'l', options4, options_trigger4, 6),
         Menu("Quit", 'q', options5, options_trigger5, 0)
     };
 
