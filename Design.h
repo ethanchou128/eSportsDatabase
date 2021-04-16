@@ -33,9 +33,12 @@ public:
     int num_options;
     bool selected;
     int selected_option;
+    bool reversed;
+    
 
     void selectNextOption();
     void selectPreviousOption();
+
 
 };
 
@@ -80,13 +83,14 @@ public:
 
     /* Adding */
     void addEntry(Menu& menu);
-    void addMenu();
 
     /* Deleting */
 
     /* Finding */
 
     /* Listing */
+    void listMenu(Menu& menu);
+
 
 };
 

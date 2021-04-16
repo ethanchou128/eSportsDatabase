@@ -1,6 +1,7 @@
 100 Thieves, 100T, {Call of Duty, Fortnite, League of Legends, Valorant}, United States, 2017, 190
 Cloud9, C9, {CS:GO, Fortnite, League of Legends, Overwatch, Rainbow Six Siege, Super Smash Bros., Valorant}, United States, 2013, 350
 Dallas Fuel, DAL, {Overwatch}, United States, 2016, 0.08
+Dignitas, DIG, {CS:GO, League of Legends, Rocket League, Valorant}, United Kingdom, 2003, 4.09
 FaZe Clan, FaZe, {CS:GO, Call of Duty, Fortnite, Rainbow Six Siege, Rocket League, Valorant}, United States, 2010, 305
 Fnatic, FNC, {CS:GO, Fortnite, League of Legends, Rainbow Six Siege, Valorant}, United Kingdom, 2004, 120
 G2 Esports, G2, {CS:GO, Fortnite, League of Legends, Rainbow Six Siege, Rocket League, Valorant}, Germany, 2015, 240.8
