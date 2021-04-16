@@ -445,7 +445,7 @@ void MenuOut::findMenu(Menu& menu){
     if (!menu.selected && menu.selected_option == -1){
         string msg = "Here you can seach records based on chooen field";
         print_centered(optionwin, 2, msg.c_str());
-        msg = "You can exit this menu by selecting 'quit' or by pressing 'ctrl+w'";
+        msg = "You can exit this menu by selecting 'return' or by pressing 'ctrl+w'";
         print_centered(optionwin, 3, msg.c_str());
         msg = "work in progress";
         print_centered(optionwin, 4, msg.c_str());
@@ -547,7 +547,7 @@ void MenuOut::listMenu(Menu& menu){
     if (!menu.selected && menu.selected_option == -1){
         string msg = "Here you can list all the records";
         print_centered(optionwin, 2, msg.c_str());
-        msg = "You can exit this menu by selecting 'quit' or by pressing 'ctrl+w'";
+        msg = "You can exit this menu by selecting 'return' or by pressing 'ctrl+w'";
         print_centered(optionwin, 3, msg.c_str());
         msg = "The 'Reversed' option is a toggle.";
         print_centered(optionwin, 4, msg.c_str());
