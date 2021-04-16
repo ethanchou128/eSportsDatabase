@@ -78,12 +78,13 @@ public:
     void selectPreviousMenu();
 
     /* Printing */
-    void printEntries(Database& database);
-    void printEntries(const vector<Team>& vT);
-    void printEntries(const Team& t);
+    void printEntries(WINDOW* win, Database& database);
+    void printEntries(WINDOW* win, const vector<Team>& vT);
+    void printEntries(WINDOW* win, const Team& t);
 
     /* Adding */
     void addEntry(Menu& menu);
+    string getaddinput(Menu& menu);
 
     /* Deleting */
 

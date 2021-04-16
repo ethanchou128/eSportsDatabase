@@ -123,7 +123,7 @@ void MenuOut::menureset(Menu& menu){
     int current_pos;
     for (int i = 0; i < menu.num_options; i++){
         if (menu.selected_option == i){
-            if (selected_menu == 2 && menu.selected){
+            if ((selected_menu == 0 || selected_menu == 2) && menu.selected){
                 wattron(optionwin, A_BLINK);
             } 
             wattron(optionwin, A_STANDOUT);
@@ -173,7 +173,7 @@ void MenuOut::draw(){
             menus[selected_menu].selected = false;
         }
         menus[selected_menu].reversed = false;
-        werase(optionwin);
+        wclear(optionwin);
         wrefresh(optionwin);
         reset();
         selected = false;
@@ -198,7 +198,7 @@ void MenuOut::drawMenuOptions(Menu& menu){
     int current_pos;
     for (int i = 0; i < menu.num_options; i++){
         if (menu.selected_option == i){
-            if (selected_menu == 2 && menu.selected){
+            if ((selected_menu == 0 || selected_menu == 2) && menu.selected){
                 wattron(optionwin, A_BLINK);
             } 
             wattron(optionwin, A_STANDOUT);
@@ -219,6 +219,7 @@ void MenuOut::drawMenuOptions(Menu& menu){
         switch (selected_menu){
             case 0:
                 addEntry(menus[selected_menu]);
+                
                 // adding
                 break;
             case 1:
@@ -360,12 +361,12 @@ void MenuOut::print_centered(WINDOW* win, int start_row, string text){
 //     }
 // }
 
-void MenuOut::printEntries(Database& database){
+void MenuOut::printEntries(WINDOW* win, Database& database){
     database.sort_by_name();
-    printEntries(database.get_database());
+    printEntries(win, database.get_database());
 }
 
-void MenuOut::printEntries(const vector<Team>& vT){
+void MenuOut::printEntries(WINDOW* win, const vector<Team>& vT){
     werase(win);
     box(win, 0, 0);
     wrefresh(win);
@@ -380,12 +381,12 @@ void MenuOut::printEntries(const vector<Team>& vT){
         string txt = "Team " + i + ':';
         print_centered(win, 2, txt);
         print_centered(win, 3, "------");
-        printEntries(t);
+        printEntries(win, t);
         i++;
     }
 }
 
-void MenuOut::printEntries(const Team& t) {
+void MenuOut::printEntries(WINDOW* win, const Team& t) {
     print_centered(win, 4, "Team Full Name: " + t.get_full());
     print_centered(win, 5, "Team Short Name: " + t.get_short());
     print_centered(win, 6, "Games Played by Team:");
@@ -412,19 +413,144 @@ void MenuOut::printEntries(const Team& t) {
  */
 //------------------------------------------------------
 void MenuOut::addEntry(Menu& menu) {
-    if (menu.selected_option == 5){
-        return;
+    if (menu.selected_option == -1){
+        string msg = "Here you can add a team to the database";
+        print_centered(optionwin, 2, msg.c_str());
+        msg = "You can exit this menu by selecting 'return' or by pressing 'ctrl+w'";
+        print_centered(optionwin, 3, msg.c_str());
+        msg = "work in progress";
+        print_centered(optionwin, 4, msg.c_str());
+    } else if (menu.selected && menu.selected_option > -1){
+        
+        curs_set(1);
+        int i = 0;
+        int row = 2;
+        int center = getmaxx(optionwin) / 2;
+        Team temp;
+        while(menu.selected){
+            string str;
+            switch (i){
+                case 0:{
+                    print_centered(optionwin, row, "What is the name of your team?");
+                    wmove(optionwin, row + 1, center - 10);
+                    str = getaddinput(menu);
+                    temp.set_full(str);
+                    break;
+                } 
+                case 1:{
+                    print_centered(optionwin, row, "What's your team's short name?");
+                    wmove(optionwin, row + 1, center - 10);
+                    str = getaddinput(menu);
+                    temp.set_short(str);
+                    break;
+                } 
+                case 2:{
+                    print_centered(optionwin, row, "Where is your team headquartered?");
+                    wmove(optionwin, row + 1, center - 10);
+                    str = getaddinput(menu);
+                    temp.set_location(str);
+                    break;
+                } 
+                case 3:{
+                    print_centered(optionwin, row, "What year was your team founded?");
+                    wmove(optionwin, row + 1, center - 10);
+                    str = getaddinput(menu);
+                    if (menu.selected == false){
+                        break;
+                    }
+                    int year = -1;
+                    bool between = true;
+                    while(year < 0 || between){
+                        try {
+                            year = stoi(str);
+                            
+                        } catch (...){
+                            
+                        }
+                        if (year > 1950 && year < 2022){
+                            between = false;
+                        }
+                        if (between){
+                            mvwprintw(optionwin, row + 1, center - 10, "                   ");
+                            wmove(optionwin, row + 1, center - 10);
+                            wrefresh(optionwin);
+                            str = getaddinput(menu);
+                            if (menu.selected == false){
+                                break;
+                            }
+                        }
+
+                        
+                    }
+                    temp.set_dateFounded(year);
+                    break;
+                } 
+                case 4:{
+                    print_centered(optionwin, row, "What's your team's net worth, in millions of dollars?");
+                    wmove(optionwin, row + 1, center - 10);
+                    str = getaddinput(menu);
+                    if (menu.selected == false){
+                        break;
+                    }
+                    float worth = -1;
+                    while(worth < 0){
+                        try {
+                            
+                            worth = stof(str);
+                            
+                        } catch (...){
+                            mvwprintw(optionwin, row + 1, center - 10, "                   ");
+                            wmove(optionwin, row + 1, center - 10);
+                            wrefresh(optionwin);
+                            str = getaddinput(menu);
+                            if (menu.selected == false){
+                                break;
+                            }   
+                        }
+                    }
+                    temp.set_netWorth(worth);
+                    break;
+                } 
+                default:
+                    menu.selected = false;
+            }
+            i++;
+            row += 2;
+        }
+
+        noecho();
+        curs_set(0);
+        menu.selected = false;
+        menureset(menu);
     }
-    print_centered(optionwin, 2, "What is the name of your team?");
-    // wrefresh(optionwin);
-    // char str[80];
-    // getstr(str);
-    // print_centered(optionwin, 3, str);
-    int i = 4;
-    for(Team t : database.get_database()) {
-        print_centered(optionwin, i, t.get_full());
-        i++;
+
+}
+
+string MenuOut::getaddinput(Menu& menu){
+    string input;
+    int ch;
+    while ((ch = wgetch(optionwin))){
+        if ( ch == ERR || ch == '\n'){
+            return input;
+        } else if (ch == ctrl('w')){
+            menu.selected = false;
+            menu.selected_option = -1;
+            return "";
+        } else if (ch == KEY_BACKSPACE){
+            input.pop_back();
+            int curx = getcurx(optionwin);
+            int cury = getcury(optionwin);
+            mvwprintw(optionwin, cury, curx - 1, " ");
+            wmove(optionwin, cury, curx - 1);
+        } else {
+            char hold = ch;
+            int curx = getcurx(optionwin);
+            int cury = getcury(optionwin);
+            mvwprintw(optionwin, cury, curx, "%c", hold);
+            input.append(1, hold);
+        }
     }
+    return input;
 }
 
 //------------------------------------------------------
@@ -443,7 +569,7 @@ void MenuOut::addEntry(Menu& menu) {
 //------------------------------------------------------
 void MenuOut::findMenu(Menu& menu){
     if (!menu.selected && menu.selected_option == -1){
-        string msg = "Here you can seach records based on chooen field";
+        string msg = "Here you can seach records based on chosen field";
         print_centered(optionwin, 2, msg.c_str());
         msg = "You can exit this menu by selecting 'return' or by pressing 'ctrl+w'";
         print_centered(optionwin, 3, msg.c_str());

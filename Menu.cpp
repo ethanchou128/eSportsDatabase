@@ -41,8 +41,8 @@ void start(){
     keypad(win, true);
     box(win,0,0);
 
-    string options1[] = {"Return"};
-    char options_trigger1[] = {'r'};
+    string options1[] = {"Add", "Return"};
+    char options_trigger1[] = {'a', 'r'};
 
     string options2[] = {"Name", "Year", "Return"};
     char options_trigger2[] = {'n', 'y', 'r'};
@@ -57,7 +57,7 @@ void start(){
     char options_trigger5[] = {};
     
     Menu menus[5] = {
-        Menu("Add", 'a', options1, options_trigger1, 1),
+        Menu("Add", 'a', options1, options_trigger1, 2),
         Menu("Delete", 'd', options2, options_trigger2, 3), 
         Menu("Find", 'f', options3, options_trigger3, 5),
         Menu("List", 'l', options4, options_trigger4, 6),
