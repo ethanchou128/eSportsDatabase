@@ -139,8 +139,8 @@ void MenuOut::draw(){
                 }
             }
 
-            if(menus[selected_menu].selected){
-                werase(optionwin);
+            if(menus[selected_menu].selected || menus[selected_menu].selected_option == -1){
+                wclear(optionwin);
                 wrefresh(optionwin);
             }
             drawMenuOptions(menus[selected_menu]);
@@ -413,9 +413,17 @@ void MenuOut::listMenu(Menu& menu){
         print_centered(optionwin, 2, msg.c_str());
         msg = "You can exit this menu by selecting 'quit' or by pressing 'ctrl+w'";
         print_centered(optionwin, 3, msg.c_str());
+        msg = "The 'Reversed' option is a toggle.";
+        msg.append(" When it is highlighted, options will be sored in reverse!");
+        print_centered(optionwin, 4, msg.c_str());
     } else if (menu.selected){
         
         switch (menu.selected_option){
+            case 0: {
+                    string msg = "Reversed has been toggled! Selecting options will be sorted according";
+                    print_centered(optionwin, 3, msg.c_str());
+                    break;
+                }
             case 1: {
                     int start = 2;
                     if (menu.reversed){
