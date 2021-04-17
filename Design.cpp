@@ -851,9 +851,24 @@ void MenuOut::findMenu(Menu& menu){
                 print_centered(optionwin, 5, "Teams:");
                 print_centered(optionwin, 6, "--------");
                 int i = 7;
-                for (Team t : database.get_by_name(sstr)){
-                    print_centered(optionwin, i, t.get_full().c_str());
-                    i++;
+                vector<Team> temp = database.get_by_name(sstr);
+                print_centered(optionwin, 15, to_string(temp.size()));
+                if(temp.size() == 0) {
+                    string alert = "No teams were found with that name.";
+                    print_centered(optionwin, i, alert);
+                } else {
+                    for (Team t : temp){
+                        if(sstr == "") {
+                            string alert = "Empty string. All teams will be printed.";
+                            print_centered(optionwin, i, alert);
+                            break;
+                            //if the user just enters a space, the program will
+                            //print all team name in the database.
+                        } else {
+                            print_centered(optionwin, i, t.get_full().c_str());
+                            i++;
+                        }
+                    }
                 }
                 break;
             }
@@ -869,15 +884,28 @@ void MenuOut::findMenu(Menu& menu){
                 print_centered(optionwin, 5, "Teams:");
                 print_centered(optionwin, 6, "--------");
                 int i = 7;
-                for (Team t : database.get_by_game(sstr)){
-                    print_centered(optionwin, i, t.get_full().c_str());
-                    i++;
+                vector<Team> temp = database.get_by_game(sstr);
+                if(temp.size() == 0) {
+                    string alert = "No games exist in the database.";
+                    print_centered(optionwin, i, alert);
+                } else {
+                    for (Team t : temp){
+                        if(sstr == "") {
+                            string alert = "Empty string. All teams will be printed.";
+                            print_centered(optionwin, i, alert);
+                            break;
+                            //if the user just enters a space, the program will
+                            //print all team name in the database.
+                        } else {
+                            print_centered(optionwin, i, t.get_full().c_str());
+                            i++;
+                        }
+                    }
                 }
                 break;
             }
             case 2: {
                 print_centered(optionwin, 3, "Where is your team located (country)?");
-
                 int center = getmaxx(optionwin) / 2;
                 wmove(optionwin, 4, center - 10);
                 char str[20];
@@ -887,9 +915,23 @@ void MenuOut::findMenu(Menu& menu){
                 print_centered(optionwin, 5, "Teams:");
                 print_centered(optionwin, 6, "--------");
                 int i = 7;
-                for (Team t : database.get_by_location(sstr)){
-                    print_centered(optionwin, i, t.get_full().c_str());
-                    i++;
+                vector<Team> temp = database.get_by_location(sstr);
+                if(temp.size() == 0) {
+                    string alert = "No teams were found with that region.";
+                    print_centered(optionwin, i, alert);
+                } else {
+                    for (Team t : temp){
+                        if(sstr == "") {
+                            string alert = "Empty string. All teams will be printed.";
+                            print_centered(optionwin, i, alert);
+                            break;
+                            //if the user just enters a space, the program will
+                            //print all team name in the database.
+                        } else {
+                            print_centered(optionwin, i, t.get_full().c_str());
+                            i++;
+                        }
+                    }
                 }
                 break;
             }
@@ -916,9 +958,23 @@ void MenuOut::findMenu(Menu& menu){
                         print_centered(optionwin, 5, "Teams:");
                         print_centered(optionwin, 6, "--------");
                         int i = 7;
-                        for (Team t : database.get_by_dateFounded(stoi(sstr))){
-                            print_centered(optionwin, i, t.get_full().c_str());
-                            i++;
+                        vector<Team> temp = database.get_by_location(sstr);
+                        if(temp.size() == 0) {
+                            string alert = "No teams were found with that date.";
+                            print_centered(optionwin, i, alert);
+                        } else {
+                            for (Team t : temp){
+                                if(sstr == "") {
+                                    string alert = "Empty string. All teams will be printed.";
+                                    print_centered(optionwin, i, alert);
+                                    break;
+                                    //if the user just enters a space, the program will
+                                    //print all team name in the database.
+                                } else {
+                                    print_centered(optionwin, i, t.get_full().c_str());
+                                    i++;
+                                }
+                            }
                         }
                         running = false;
                     } else {
