@@ -148,8 +148,8 @@ void MenuOut::draw(){
             drawMenu(menus[i], selected_menu == i);
         }
     } else if (selected && selected_menu == num_menus - 1){
-        run = false;
         database.save_to_file("database.txt");
+        run = false;
     } else {
         int ch;
         drawMenuOptions(menus[selected_menu]);
