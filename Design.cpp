@@ -21,7 +21,6 @@ using namespace std;
 //------------------------------------------------------
 Menu::Menu(string text, char trigger, string* options, char* options_trigger, int num_options)
 {
-    
     this->text = text;
     this->trigger = trigger;
     this->options = options;
@@ -30,10 +29,6 @@ Menu::Menu(string text, char trigger, string* options, char* options_trigger, in
     this->selected_option = -1;
     this->selected = false;
     this->reversed = false;
-    
-    // for (int i = 0; i < num_options; i++){
-    //     this->reversed.push_back(0);
-    // }
 }
 
 
@@ -216,7 +211,8 @@ void MenuOut::drawMenuOptions(Menu& menu){
         wattroff(optionwin, A_BLINK);
         wrefresh(optionwin);
     }
-    if (selected){
+    //this is the switch that determines which feature the user wants to access
+    if (selected){ 
         switch (selected_menu){
             case 0:
                 addEntry(menus[selected_menu]);
@@ -356,12 +352,6 @@ void MenuOut::print_centered(WINDOW* win, int start_row, string text){
     mvwprintw(win, start_row, adj, text.c_str());
 }
 
-// void listEntries(Menu& menu, vector<Team> vT) {
-//     if(menu.selected_option == 6) {
-//         return;
-//     }
-// }
-
 void MenuOut::printEntries(WINDOW* win, Database& database){
     database.sort_by_name();
     printEntries(win, database.get_database());
@@ -414,14 +404,15 @@ void MenuOut::printEntries(WINDOW* win, const Team& t) {
  */
 //------------------------------------------------------
 void MenuOut::addEntry(Menu& menu) {
+    //minor menu to indicate instructions, etc.
     if (menu.selected_option == -1){
         string msg = "Here you can add a team to the database";
         print_centered(optionwin, 2, msg.c_str());
         msg = "You can exit this menu by selecting 'return' or by pressing 'ctrl+w'";
         print_centered(optionwin, 3, msg.c_str());
-        // msg = "work in progress";
-        // print_centered(optionwin, 4, msg.c_str());
-    } else if (menu.selected && menu.selected_option > -1){
+    } 
+    //user add entry option
+    else if (menu.selected && menu.selected_option > -1){
         
         curs_set(1);
         int i = 0;
@@ -469,6 +460,7 @@ void MenuOut::addEntry(Menu& menu) {
                     row++;
                     print_centered(optionwin, row, "Type the number of the game to add! Enter \"0\" when finished.");
                     vector<string> gamesPlayed;
+                    //vector that stores valid games; if we held all games this folder is too big
                     vector<string> eligibleGames;
                     eligibleGames = {"Call of Duty", "CS:GO", "Fortnite", "League of Legends", 
                     "Overwatch", "Rainbow Six Siege", 
@@ -649,7 +641,8 @@ void MenuOut::deleteEntry(Menu &menu) {
                 bool running = true;
                 vector<Team> temp = database.get_database();
                 int initRowIndex = 6;
-                for(int i = 0; i < temp.size(); i++) {
+                for(int i = 0; i < temp.size(); i++) { //loop that prints options
+            //this loop is featured in the other delete entry sections, modified accordingly
                     print_centered(optionwin, initRowIndex, temp.at(i).get_full());
                     initRowIndex++;
                 }
@@ -766,7 +759,7 @@ void MenuOut::deleteEntry(Menu &menu) {
                     char str[20] = "";
                     wgetnstr(optionwin, str, 20);
                     string sstr(str);
-                    try {
+                    try { //checks to see if year is an int
                         year = stoi(sstr);
                     } catch (...) {
 
