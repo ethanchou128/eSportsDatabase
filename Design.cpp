@@ -149,6 +149,7 @@ void MenuOut::draw(){
         }
     } else if (selected && selected_menu == num_menus - 1){
         run = false;
+        database.save_to_file("database.txt");
     } else {
         int ch;
         drawMenuOptions(menus[selected_menu]);
@@ -439,20 +440,70 @@ void MenuOut::addEntry(Menu& menu) {
                     break;
                 } 
                 case 1:{
+                    print_centered(optionwin, row, "Which games does your team participate in? ");
+                    row++;
+                    print_centered(optionwin, row, "Type the number of the game to add!");
+                    vector<string> gamesPlayed;
+                    vector<string> eligibleGames;
+                    eligibleGames = {"Call of Duty", "CS:GO", "Fortnite", "League of Legends", 
+                    "Overwatch", "Rainbow Six Siege", 
+                    "Rocket League", "Super Smash Bros.", "Valorant"};
+                    for(int i = 0; i < eligibleGames.size(); i++) {
+                        mvwprintw(optionwin, row + i, 0, to_string(i + 1).c_str());
+                        mvwprintw(optionwin, row + i, 2, eligibleGames.at(i).c_str());
+                    }
+
+                    wmove(optionwin, row + 1, center - 10);
+                    str = getaddinput(menu);
+                    int game = -1;
+                    bool between = true;
+                    while(game != 0){
+                        try {
+                            game = stoi(str);
+                            if (game == 0){
+                                break;
+                            }
+                            
+                        } catch (...){
+                            
+                        }
+                        if (game > 0 && game <= eligibleGames.size()){
+                            gamesPlayed.push_back(eligibleGames.at(game - 1));
+                            for(int i = 0; i < eligibleGames.size(); i++) {
+                                if (i == game - 1){
+                                    mvwprintw(optionwin, row + i, 1, "+");
+                                }
+                            }
+                        }
+                        if (between){
+                            mvwprintw(optionwin, row + 1, center - 10, "                   ");
+                            wmove(optionwin, row + 1, center - 10);
+                            wrefresh(optionwin);
+                            str = getaddinput(menu);
+                            if (menu.selected == false){
+                                break;
+                            }
+                        }
+                    }
+                    sort(gamesPlayed.begin(), gamesPlayed.end());
+                    temp.set_divList(gamesPlayed);
+                    break;
+                }
+                case 2:{
                     print_centered(optionwin, row, "What's your team's short name?");
                     wmove(optionwin, row + 1, center - 10);
                     str = getaddinput(menu);
                     temp.set_short(str);
                     break;
                 } 
-                case 2:{
+                case 3:{
                     print_centered(optionwin, row, "Where is your team headquartered?");
                     wmove(optionwin, row + 1, center - 10);
                     str = getaddinput(menu);
                     temp.set_location(str);
                     break;
                 } 
-                case 3:{
+                case 4:{
                     print_centered(optionwin, row, "What year was your team founded?");
                     wmove(optionwin, row + 1, center - 10);
                     str = getaddinput(menu);
@@ -464,6 +515,9 @@ void MenuOut::addEntry(Menu& menu) {
                     while(year < 0 || between){
                         try {
                             year = stoi(str);
+                            if (year > 1950 && year < 2022){
+                                break;
+                            }
                             
                         } catch (...){
                             
@@ -480,13 +534,11 @@ void MenuOut::addEntry(Menu& menu) {
                                 break;
                             }
                         }
-
-                        
                     }
                     temp.set_dateFounded(year);
                     break;
                 } 
-                case 4:{
+                case 5:{
                     print_centered(optionwin, row, "What's your team's net worth, in millions of dollars?");
                     wmove(optionwin, row + 1, center - 10);
                     str = getaddinput(menu);
@@ -518,7 +570,7 @@ void MenuOut::addEntry(Menu& menu) {
             i++;
             row += 2;
         }
-
+        database.add_team(temp);
         noecho();
         curs_set(0);
         menu.selected = false;
