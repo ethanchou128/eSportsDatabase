@@ -433,11 +433,63 @@ void MenuOut::addEntry(Menu& menu) {
             string str;
             switch (i){
                 case 0:{
-                    print_centered(optionwin, row, "What is the name of your team?");
-                    wmove(optionwin, row + 1, center - 10);
-                    str = getaddinput(menu);
-                    temp.set_full(str);
+                    // print_centered(optionwin, row, "What is the name of your team?");
+                    // wmove(optionwin, row + 1, center - 10);
+                    // str = getaddinput(menu);
+                    // temp.set_full(str);
+                    // break;
+
+                    print_centered(optionwin, row, "What's the name of your team?");
+                    
+                    bool running = true;
+                    while(running) {
+                        bool exists = false;
+                        int center = getmaxx(optionwin) / 2;
+                        wmove(optionwin, 3, center - 10);
+                        //char str[20] = "";
+                        str = getaddinput(menu);
+                        // wgetnstr(optionwin, str, 20);
+                        // string sstr(str);
+                        print_centered(optionwin, 10, str);
+                        for(Team t : database.get_database()) {
+                            if(str == t.get_full()) {
+                                exists = true;
+                                break;
+                            }
+                        }
+                        if(exists) {
+                            print_centered(optionwin, row, "                             ");
+                            print_centered(optionwin, row, "Team already exists. Try again.");
+                            print_centered(optionwin, row+1, "                           ");
+                        } else {
+                            temp.set_full(str);
+                            running = false;
+                        }
+                    }
                     break;
+                    // while(running) {
+                    //     for(Team t : database.get_database()) {
+                    //         wmove(optionwin, row + 1, center - 10);
+                    //         str = getaddinput(menu);
+                    //         if(str == t.get_full()) {
+                    //             print_centered(optionwin, row, "                             ");
+                    //             print_centered(optionwin, row, "Team already exists. Try again.");
+                    //             print_centered(optionwin, row+1, "                           ");
+                    //             exists = true;
+                    //         }
+                    //     }
+                    //     if(!exists) {
+                    //         running = false;
+                    //     }
+                    // }
+                    // temp.set_full(str);
+                    // break;
+                    // print_centered(optionwin, row, "What is the name of your team?");
+                    // wmove(optionwin, row + 1, center - 10);
+                    // str = getaddinput(menu);
+                    // temp.set_full(str);
+                    // break;
+                    
                 } 
                 case 1:{
                     print_centered(optionwin, row, "Which games does your team participate in? ");
