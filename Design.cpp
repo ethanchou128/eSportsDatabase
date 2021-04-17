@@ -220,7 +220,6 @@ void MenuOut::drawMenuOptions(Menu& menu){
         switch (selected_menu){
             case 0:
                 addEntry(menus[selected_menu]);
-                
                 // adding
                 break;
             case 1:
@@ -646,8 +645,14 @@ void MenuOut::deleteEntry(Menu &menu) {
             case 0: {
 
                 print_centered(optionwin, 3, "What is the name of the team?");
+                print_centered(optionwin, 5, "Here are the options:");
                 bool running = true;
                 vector<Team> temp = database.get_database();
+                int initRowIndex = 6;
+                for(int i = 0; i < temp.size(); i++) {
+                    print_centered(optionwin, initRowIndex, temp.at(i).get_full());
+                    initRowIndex++;
+                }
                 while(running) {
                     int center = getmaxx(optionwin) / 2;
                     wmove(optionwin, 4, center - 10);
@@ -667,6 +672,7 @@ void MenuOut::deleteEntry(Menu &menu) {
                         mvwprintw(optionwin, 4, center - 10, "                   ");
                     }
                 }
+                menureset(menu);
                 int i = 5;
                 print_centered(optionwin, i-1, "Teams remaining:");
                 for (Team t : temp){
@@ -679,8 +685,16 @@ void MenuOut::deleteEntry(Menu &menu) {
             case 1: {
                 database.sort_by_location();
                 print_centered(optionwin, 3, "Which region's teams would you like to omit?");
+                print_centered(optionwin, 5, "Here are the options:");
                 bool running = true;
                 vector<Team> temp = database.get_database();
+                int initRowIndex = 6;
+                for(int i = 0; i < temp.size(); i++) {
+                    string format = database.get_database().at(i).get_full() + " -  "; 
+                    format.append(database.get_database().at(i).get_location());
+                    print_centered(optionwin, initRowIndex, format);
+                    initRowIndex++;
+                }
                 int vectorIndex = 0;
                 int firstIndex = -1;
                 int lastIndex = -2;
@@ -714,19 +728,24 @@ void MenuOut::deleteEntry(Menu &menu) {
                         running = false;
                     }
                 }
-                int i = 5;
-                print_centered(optionwin, i-1, "Teams remaining:");
-                for (Team t : temp){
-                    print_centered(optionwin, i, "                           ");
-                    print_centered(optionwin, i, t.get_full().c_str());
-                    i++;
-                }
+                menureset(menu);
+                int rowIndex = 5;
+                print_centered(optionwin, rowIndex-1, "                          ");
+                print_centered(optionwin, rowIndex-1, "Teams remaining:");
                 database.replaceVector(temp);
+                for (int i = 0; i < database.get_size(); i++){
+                    string format = database.get_database().at(i).get_full() + " -  "; 
+                    format.append(database.get_database().at(i).get_location());
+                    print_centered(optionwin, rowIndex + i, format);
+                    
+                }
+                
                 break;
             }
             case 2: {
                 database.sort_by_yearFounded();
                 print_centered(optionwin, 3, "Which year's teams would you like to omit?");
+                print_centered(optionwin, 5, "Here are the options:");
                 bool exists = false;
                 int year = -1;
                 int vectorIndex = 0;
@@ -734,6 +753,13 @@ void MenuOut::deleteEntry(Menu &menu) {
                 int lastIndex = -2;
                 bool between = true;
                 vector<Team> temp = database.get_database();
+                int initRowIndex = 6;
+                for(int i = 0; i < temp.size(); i++) {
+                    string format = database.get_database().at(i).get_full() + " -   Est. "; 
+                    format.append(to_string(database.get_database().at(i).get_dateFounded()));
+                    print_centered(optionwin, initRowIndex, format);
+                    initRowIndex++;
+                }
                 while(between || year < 0 || !exists) {
                     int center = getmaxx(optionwin) / 2;
                     wmove(optionwin, 4, center - 10);
@@ -772,14 +798,15 @@ void MenuOut::deleteEntry(Menu &menu) {
                             temp.erase(temp.begin() + firstIndex, temp.begin() + lastIndex);
                         }    
                     }
-                    int i = 5;
-                    print_centered(optionwin, i-1, "Teams remaining:");
-                    for (Team t : temp){
-                        print_centered(optionwin, i, "                           ");
-                        print_centered(optionwin, i, t.get_full().c_str());
-                        i++;
-                    }
+                    menureset(menu);
+                    int rowIndex = 5;
+                    print_centered(optionwin, rowIndex-1, "   Teams remaining:   ");
                     database.replaceVector(temp);
+                    for (int i = 0; i < database.get_size(); i++){
+                        string format = database.get_database().at(i).get_full() + " -   Est. "; 
+                        format.append(to_string(database.get_database().at(i).get_dateFounded()));
+                        print_centered(optionwin, rowIndex + i, format);
+                    }
                     break;
                 }
             }
@@ -870,19 +897,35 @@ void MenuOut::findMenu(Menu& menu){
                 print_centered(optionwin, 3, "When was your team founded?");
 
                 int center = getmaxx(optionwin) / 2;
-                wmove(optionwin, 4, center - 10);
-                char str[20];
-                wgetnstr(optionwin, str, 20);
-                string sstr(str);
-                sstr = cmpt::clean(sstr);
-                print_centered(optionwin, 5, "Teams:");
-                print_centered(optionwin, 6, "--------");
-                int i = 7;
-                for (Team t : database.get_by_dateFounded(stoi(sstr))){
-                    print_centered(optionwin, i, t.get_full().c_str());
-                    i++;
+                bool isNum = true;
+                bool running = true;
+                //string str;
+                while(running) {
+                    wmove(optionwin, 4, center - 10);
+                    char str[20];
+                    wgetnstr(optionwin, str, 20);
+                    string sstr(str);
+                    sstr = cmpt::clean(sstr);
+                    for(int i = 0; i < sstr.length(); i++) {
+                        if(!isdigit(sstr.at(i))) {
+                            isNum = false;
+                            break;
+                        }
+                    }
+                    if(isNum && sstr != "") {
+                        print_centered(optionwin, 5, "Teams:");
+                        print_centered(optionwin, 6, "--------");
+                        int i = 7;
+                        for (Team t : database.get_by_dateFounded(stoi(sstr))){
+                            print_centered(optionwin, i, t.get_full().c_str());
+                            i++;
+                        }
+                        running = false;
+                    } else {
+                        print_centered(optionwin, 3, "That number is invalid. Try again.");
+                    }
                 }
-                break;
+                // s
             }
         }
         noecho();
