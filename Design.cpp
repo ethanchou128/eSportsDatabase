@@ -112,7 +112,7 @@ void MenuOut::reset(){
     print_centered(win, 2, "Welcome to Justin and Ethan's Database of Esports Teams");
     print_centered(win, 3, "Press the letter that corresponds to the action to select it");
     print_centered(win, 4, "Alternatively you can use the arrow keys go through the menu");
-    print_centered(win, 5, "Press enter once you have selected an option");
+    print_centered(win, 5, "Press Enter once you have selected an option");
 
     wrefresh(win);
 }
@@ -374,7 +374,7 @@ void MenuOut::printEntries(WINDOW* win, const vector<Team>& vT){
     wrefresh(win);
 
     if (vT.empty()){
-        print_centered(win, 2, "There are not records to print!");
+        print_centered(win, 2, "There are no records to print!");
         return;
     }
     int i = 1;
@@ -420,8 +420,8 @@ void MenuOut::addEntry(Menu& menu) {
         print_centered(optionwin, 2, msg.c_str());
         msg = "You can exit this menu by selecting 'return' or by pressing 'ctrl+w'";
         print_centered(optionwin, 3, msg.c_str());
-        msg = "work in progress";
-        print_centered(optionwin, 4, msg.c_str());
+        // msg = "work in progress";
+        // print_centered(optionwin, 4, msg.c_str());
     } else if (menu.selected && menu.selected_option > -1){
         
         curs_set(1);
@@ -433,12 +433,6 @@ void MenuOut::addEntry(Menu& menu) {
             string str;
             switch (i){
                 case 0:{
-                    // print_centered(optionwin, row, "What is the name of your team?");
-                    // wmove(optionwin, row + 1, center - 10);
-                    // str = getaddinput(menu);
-                    // temp.set_full(str);
-                    // break;
-
                     print_centered(optionwin, row, "What's the name of your team?");
                     
                     bool running = true;
@@ -446,11 +440,7 @@ void MenuOut::addEntry(Menu& menu) {
                         bool exists = false;
                         int center = getmaxx(optionwin) / 2;
                         wmove(optionwin, 3, center - 10);
-                        //char str[20] = "";
                         str = getaddinput(menu);
-                        // wgetnstr(optionwin, str, 20);
-                        // string sstr(str);
-                        print_centered(optionwin, 10, str);
                         for(Team t : database.get_database()) {
                             if(str == t.get_full()) {
                                 exists = true;
@@ -467,34 +457,18 @@ void MenuOut::addEntry(Menu& menu) {
                         }
                     }
                     break;
-                    // while(running) {
-                    //     for(Team t : database.get_database()) {
-                    //         wmove(optionwin, row + 1, center - 10);
-                    //         str = getaddinput(menu);
-                    //         if(str == t.get_full()) {
-                    //             print_centered(optionwin, row, "                             ");
-                    //             print_centered(optionwin, row, "Team already exists. Try again.");
-                    //             print_centered(optionwin, row+1, "                           ");
-                    //             exists = true;
-                    //         }
-                    //     }
-                    //     if(!exists) {
-                    //         running = false;
-                    //     }
-                    // }
-                    // temp.set_full(str);
-                    // break;
-                    // print_centered(optionwin, row, "What is the name of your team?");
-                    // wmove(optionwin, row + 1, center - 10);
-                    // str = getaddinput(menu);
-                    // temp.set_full(str);
-                    // break;
-                    
                 } 
                 case 1:{
+                    print_centered(optionwin, row, "What's your team's short name?");
+                    wmove(optionwin, row + 1, center - 10);
+                    str = getaddinput(menu);
+                    temp.set_short(str);
+                    break;
+                }
+                case 2:{
                     print_centered(optionwin, row, "Which games does your team participate in? ");
                     row++;
-                    print_centered(optionwin, row, "Type the number of the game to add!");
+                    print_centered(optionwin, row, "Type the number of the game to add! Enter \"0\" when finished.");
                     vector<string> gamesPlayed;
                     vector<string> eligibleGames;
                     eligibleGames = {"Call of Duty", "CS:GO", "Fortnite", "League of Legends", 
@@ -504,7 +478,6 @@ void MenuOut::addEntry(Menu& menu) {
                         mvwprintw(optionwin, row + i, 0, to_string(i + 1).c_str());
                         mvwprintw(optionwin, row + i, 2, eligibleGames.at(i).c_str());
                     }
-
                     wmove(optionwin, row + 1, center - 10);
                     str = getaddinput(menu);
                     int game = -1;
@@ -539,13 +512,6 @@ void MenuOut::addEntry(Menu& menu) {
                     }
                     sort(gamesPlayed.begin(), gamesPlayed.end());
                     temp.set_divList(gamesPlayed);
-                    break;
-                }
-                case 2:{
-                    print_centered(optionwin, row, "What's your team's short name?");
-                    wmove(optionwin, row + 1, center - 10);
-                    str = getaddinput(menu);
-                    temp.set_short(str);
                     break;
                 } 
                 case 3:{
@@ -623,6 +589,7 @@ void MenuOut::addEntry(Menu& menu) {
             row += 2;
         }
         database.add_team(temp);
+        print_centered(optionwin, row+1, "Team added!");
         noecho();
         curs_set(0);
         menu.selected = false;
@@ -687,7 +654,6 @@ void MenuOut::deleteEntry(Menu &menu) {
                     char str[20] = "";
                     wgetnstr(optionwin, str, 20);
                     string sstr(str);
-                    print_centered(optionwin, 10, sstr);
                     int vectorIndex = 0;
                     for(Team t : temp) {
                         if(sstr == t.get_full()) {
@@ -702,6 +668,7 @@ void MenuOut::deleteEntry(Menu &menu) {
                     }
                 }
                 int i = 5;
+                print_centered(optionwin, i-1, "Teams remaining:");
                 for (Team t : temp){
                     print_centered(optionwin, i, t.get_full().c_str());
                     i++;
@@ -725,7 +692,6 @@ void MenuOut::deleteEntry(Menu &menu) {
                     wgetnstr(optionwin, str, 20);
                     string sstr(str);
                     //sstr = cmpt::clean(sstr);
-                    print_centered(optionwin, 10, sstr);
                     for(Team t : temp) {
                         if(sstr == t.get_location()) {
                             if(!exists) {
@@ -749,6 +715,7 @@ void MenuOut::deleteEntry(Menu &menu) {
                     }
                 }
                 int i = 5;
+                print_centered(optionwin, i-1, "Teams remaining:");
                 for (Team t : temp){
                     print_centered(optionwin, i, "                           ");
                     print_centered(optionwin, i, t.get_full().c_str());
@@ -806,6 +773,7 @@ void MenuOut::deleteEntry(Menu &menu) {
                         }    
                     }
                     int i = 5;
+                    print_centered(optionwin, i-1, "Teams remaining:");
                     for (Team t : temp){
                         print_centered(optionwin, i, "                           ");
                         print_centered(optionwin, i, t.get_full().c_str());
@@ -832,7 +800,7 @@ void MenuOut::deleteEntry(Menu &menu) {
 //------------------------------------------------------
 void MenuOut::findMenu(Menu& menu){
     if (!menu.selected && menu.selected_option == -1){
-        string msg = "Here you can seach records based on chosen field";
+        string msg = "Here you can search records based on chosen field";
         print_centered(optionwin, 2, msg.c_str());
         msg = "You can exit this menu by selecting 'return' or by pressing 'ctrl+w'";
         print_centered(optionwin, 3, msg.c_str());
@@ -863,7 +831,7 @@ void MenuOut::findMenu(Menu& menu){
                 break;
             }
             case 1: {
-                print_centered(optionwin, 3, "What is the games does your team play?");
+                print_centered(optionwin, 3, "What are the games your team plays?");
 
                 int center = getmaxx(optionwin) / 2;
                 wmove(optionwin, 4, center - 10);
@@ -949,7 +917,7 @@ void MenuOut::listMenu(Menu& menu){
             case 0: {
                 string msg = "Reversed has been toggled!";
                 print_centered(optionwin, 3, msg.c_str());
-                msg = " Selecting options will be sorted according";
+                msg = "Selecting options will be sorted accordingly";
                 print_centered(optionwin, 4, msg.c_str());
                 break;
             }
