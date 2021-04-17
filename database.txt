@@ -1,3 +1,4 @@
+, , {}, , 0, 4.58589e-41
 100 Thieves, 100T, {Call of Duty, Fortnite, League of Legends, Valorant}, United States, 2017, 190
 Cloud9, C9, {CS:GO, Fortnite, League of Legends, Overwatch, Rainbow Six Siege, Super Smash Bros., Valorant}, United States, 2013, 350
 Dallas Fuel, DAL, {Overwatch}, United States, 2016, 0.08
@@ -20,3 +21,4 @@ Sentinels, SEN, {Fortnite, Valorant}, United States, 2018, 0.167
 Team Envy, NV, {CS:GO, Call of Duty, Fortnite, League of Legends, Overwatch, Rocket League, Super Smash Bros., Valorant}, United States, 2007, 170
 Team Liquid, Liquid, {CS:GO, Call of Duty, Fortnite, League of Legends, Rainbow Six Siege, Rocket League, Super Smash Bros., Valorant}, Netherlands, 2000, 467
 Team SoloMid, TSM, {Fortnite, League of Legends, Rainbow Six Siege, Super Smash Bros., Valorant}, United States, 2009, 410
+
