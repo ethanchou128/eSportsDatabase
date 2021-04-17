@@ -135,12 +135,15 @@ void Database::read_line(const string& line){
     string field;
     int fieldNum = 1;
     Team temp;
+    if (line.empty()){
+        return;
+    }
     for (int i = 0; i < line.size(); i++){
         if (line.at(i) != ',' && i != line.size() - 1 && line.at(i) != '{' && line.at(i) != '}'){
             field.push_back(line.at(i));
         } else if (i == line.size() - 1){
             field.push_back(line.at(i));
-            temp.set_netWorth(stod(cmpt::trim(field)));
+            temp.set_netWorth(stof(cmpt::trim(field)));
         } else if (line.at(i) == ',' && line.at(i - 1) != '}'){
             field = cmpt::trim(field);
             switch (fieldNum){
