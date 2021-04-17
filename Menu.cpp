@@ -125,10 +125,6 @@ void askMenu(Database& database){
         } else if (input == "d"){
             deleteEntry(database);
         } else if (input == "l"){
-            // sort(database.begin(), database.end());
-            // for(Team t : database) {
-            //     printEntries(t);
-            // }
             listEntries(database);
         } else if (input == "q"){ 
             database.save_to_file("database.txt");
@@ -257,9 +253,6 @@ string getFullName(const Database& database) {
             isValid = true;
         }
     }
-    // if(exists) {
-    //     getFullName(database);
-    // }
     return userInput;
 };
 
@@ -368,21 +361,13 @@ int getYearFounded() {
     cout << "Please enter the year your team was founded: ";
     cout << "If you'd like to return to the main menu, please enter \"-1\"." << endl;
     int userInput;
-    //cin.ignore(100, '\n');
-    //cin.sync();
     cin >> userInput;
     while (cin.fail()){
         cout << "Sorry, that's an invalid entry. Please Try Again." << endl;
         cin >> userInput;
     }
-    
-    // if(!isNum) {
-    //     getYearFounded();
-    // }
-
     int num = userInput;
     return num;
-
 };
 
 float getNetWorth() {
@@ -460,7 +445,6 @@ void deleteByName(Database &database) {
         cout << f.get_full() << endl;
     }
     cout << "Please enter the team name that you want to delete: ";
-    //cin.ignore(100, '\n');
     string userInput;
     getline(cin, userInput);
     
