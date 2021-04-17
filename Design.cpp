@@ -224,6 +224,7 @@ void MenuOut::drawMenuOptions(Menu& menu){
                 break;
             case 1:
                 // deleting
+                deleteEntry(menus[selected_menu]);
                 break;
             case 2:
                 // finding
@@ -558,7 +559,165 @@ string MenuOut::getaddinput(Menu& menu){
  * Calls when user wants to delete record
  */
 //------------------------------------------------------
+void MenuOut::deleteEntry(Menu &menu) {
+    if (!menu.selected && menu.selected_option == -1){
+        string msg = "Here you can delete records based on chosen field";
+        print_centered(optionwin, 2, msg.c_str());
+        msg = "You can exit this menu by selecting 'return' or by pressing 'ctrl+w'";
+        print_centered(optionwin, 3, msg.c_str());
+        msg = "work in progress";
+        print_centered(optionwin, 4, msg.c_str());
+        
+    } else if (menu.selected){
+        echo();
+        curs_set(1);
+        switch (menu.selected_option){
+            case 0: {
 
+                print_centered(optionwin, 3, "What is the name of the team?");
+                bool running = true;
+                vector<Team> temp = database.get_database();
+                while(running) {
+                    int center = getmaxx(optionwin) / 2;
+                    wmove(optionwin, 4, center - 10);
+                    char str[20] = "";
+                    wgetnstr(optionwin, str, 20);
+                    string sstr(str);
+                    print_centered(optionwin, 10, sstr);
+                    int vectorIndex = 0;
+                    for(Team t : temp) {
+                        if(sstr == t.get_full()) {
+                            temp.erase(temp.begin() + vectorIndex);
+                            running = false;
+                        }
+                        vectorIndex++;
+                    }
+                    if(running) {
+                        print_centered(optionwin, 3, "That team doesn't exist. Try again.");
+                        mvwprintw(optionwin, 4, center - 10, "                   ");
+                    }
+                }
+                int i = 5;
+                for (Team t : temp){
+                    print_centered(optionwin, i, t.get_full().c_str());
+                    i++;
+                }
+                database.replaceVector(temp);
+                break;
+            }
+            case 1: {
+                database.sort_by_location();
+                print_centered(optionwin, 3, "Which region's teams would you like to omit?");
+                bool running = true;
+                vector<Team> temp = database.get_database();
+                int vectorIndex = 0;
+                int firstIndex = -1;
+                int lastIndex = -2;
+                bool exists = false;
+                while(running) {
+                    int center = getmaxx(optionwin) / 2;
+                    wmove(optionwin, 4, center - 10);
+                    char str[20] = "";
+                    wgetnstr(optionwin, str, 20);
+                    string sstr(str);
+                    //sstr = cmpt::clean(sstr);
+                    print_centered(optionwin, 10, sstr);
+                    for(Team t : temp) {
+                        if(sstr == t.get_location()) {
+                            if(!exists) {
+                                firstIndex = vectorIndex;
+                                exists = true;
+                            }
+                        } else {
+                            if(firstIndex != -1) {
+                                lastIndex = vectorIndex;
+                                break;
+                            }
+                        }
+                        vectorIndex++;
+                    }
+                    if(!exists) {
+                        print_centered(optionwin, 3, "This region does not exist. Please try again.");
+                        mvwprintw(optionwin, 4, center - 10, "                      ");
+                    } else {
+                        temp.erase(temp.begin() + firstIndex, temp.begin() + lastIndex);
+                        running = false;
+                    }
+                }
+                int i = 5;
+                for (Team t : temp){
+                    print_centered(optionwin, i, "                           ");
+                    print_centered(optionwin, i, t.get_full().c_str());
+                    i++;
+                }
+                database.replaceVector(temp);
+                break;
+            }
+            case 2: {
+                database.sort_by_yearFounded();
+                print_centered(optionwin, 3, "Which year's teams would you like to omit?");
+                bool exists = false;
+                int year = -1;
+                int vectorIndex = 0;
+                int firstIndex = -1;
+                int lastIndex = -2;
+                bool between = true;
+                vector<Team> temp = database.get_database();
+                while(between || year < 0 || !exists) {
+                    int center = getmaxx(optionwin) / 2;
+                    wmove(optionwin, 4, center - 10);
+                    char str[20] = "";
+                    wgetnstr(optionwin, str, 20);
+                    string sstr(str);
+                    try {
+                        year = stoi(sstr);
+                    } catch (...) {
+
+                    }
+                    if(year > 1950 && year < 2022) {
+                        between = false;
+                    }
+                    if(between){
+                        print_centered(optionwin, 3, "That's an invalid option. Please try again.");
+                    } else {
+                        for(Team t : temp) {
+                            if(year == t.get_dateFounded()) {
+                                if(!exists) {
+                                    firstIndex = vectorIndex;
+                                    exists = true;
+                                }
+                            } else {
+                                if(firstIndex != -1) {
+                                    lastIndex = vectorIndex;
+                                    break;
+                                }
+                            }
+                            vectorIndex++;
+                        }
+                        if(!exists) {
+                            print_centered(optionwin, 3, "This region does not exist. Please try again.");
+                            mvwprintw(optionwin, 4, center - 10, "                      ");
+                        } else {
+                            temp.erase(temp.begin() + firstIndex, temp.begin() + lastIndex);
+                        }    
+                    }
+                    int i = 5;
+                    for (Team t : temp){
+                        print_centered(optionwin, i, "                           ");
+                        print_centered(optionwin, i, t.get_full().c_str());
+                        i++;
+                    }
+                    database.replaceVector(temp);
+                    break;
+                }
+            }
+        }
+        noecho();
+        curs_set(0);
+        menu.selected = false;
+        menureset(menu);
+    }
+}
 
 
 
