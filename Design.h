@@ -87,6 +87,7 @@ public:
     string getaddinput(Menu& menu);
 
     /* Deleting */
+    void deleteEntry(Menu& menu);
 
     /* Finding */
     void findMenu(Menu& menu);

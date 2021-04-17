@@ -44,8 +44,8 @@ void start(){
     string options1[] = {"Add", "Return"};
     char options_trigger1[] = {'a', 'r'};
 
-    string options2[] = {"Name", "Year", "Return"};
-    char options_trigger2[] = {'n', 'y', 'r'};
+    string options2[] = {"Name", "Location", "Year", "Return"};
+    char options_trigger2[] = {'n', 'l', 'y', 'r'};
 
     string options3[] = {"Name", "Game", "Location", "Date", "Return"};
     char options_trigger3[] = {'n', 'g', 'l', 'd', 'r'};
@@ -58,7 +58,7 @@ void start(){
     
     Menu menus[5] = {
         Menu("Add", 'a', options1, options_trigger1, 2),
-        Menu("Delete", 'd', options2, options_trigger2, 3), 
+        Menu("Delete", 'd', options2, options_trigger2, 4), 
         Menu("Find", 'f', options3, options_trigger3, 5),
         Menu("List", 'l', options4, options_trigger4, 6),
         Menu("Quit", 'q', options5, options_trigger5, 0)
