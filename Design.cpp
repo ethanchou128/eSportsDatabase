@@ -690,9 +690,11 @@ void MenuOut::deleteEntry(Menu &menu) {
                 mvwprintw(optionwin, 4, i, "                   ");
                 print_centered(optionwin, i-1, "Teams remaining:");
                 for (Team t : temp){
+                    print_centered(optionwin, i, "                            ");
                     print_centered(optionwin, i, t.get_full().c_str());
                     i++;
                 }
+                print_centered(optionwin, i, "                            ");
                 database.replaceVector(temp);
                 break;
             }
@@ -755,6 +757,10 @@ void MenuOut::deleteEntry(Menu &menu) {
                 int rowIndex = 5;
                 print_centered(optionwin, rowIndex-1, "                          ");
                 print_centered(optionwin, rowIndex-1, "Teams remaining:");
+                for(int index = 0; index < database.get_database().size(); index++) {
+                    string blank = "                                     ";
+                    print_centered(optionwin, rowIndex+index, blank);
+                }
                 database.replaceVector(temp);
                 for (int i = 0; i < database.get_size(); i++){
                     string format = database.get_database().at(i).get_full() + " -  "; 
@@ -820,7 +826,7 @@ void MenuOut::deleteEntry(Menu &menu) {
                         }
                         if(!exists) {
                             mvwprintw(optionwin, 3, center - 10, "                              ");
-                            print_centered(optionwin, 3, "This region does not exist. " 
+                            print_centered(optionwin, 3, "This year is invalid. " 
                             "Please try again.");
                             mvwprintw(optionwin, 4, center - 10, "                              ");
                             wmove(optionwin, 4, center - 10);

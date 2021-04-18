@@ -114,7 +114,7 @@ void askMenu(Database& database){
                 "-------------------\n\n";
 
         cout << "Enter the letter of your choice: ";
-
+        //input that determines which feature the user wants to use
         string input;
         cin >> input;
         cout << endl;
@@ -143,7 +143,7 @@ void printEntries(Database& database){
     database.sort_by_name();
     printEntries(database.get_database());
 }
-
+//generic print teams function
 void printEntries(const vector<Team>& vT){
     if (vT.empty()){
         cout << "There are not records to print!\n";
@@ -180,9 +180,11 @@ void printEntries(const Team& t) {
 void addEntry(Database& database) {
     Team temp;
     cout << "So you want to add a team? " << endl;
-    cout << "If you would like to return to the main menu, please enter \"X\"." << endl;
+    cout << "If you would like to return to the main menu, please enter \"X\"";
+    cout << "unless indicated otherwise." << endl;
     string fullName = getFullName(database);
-    if(fullName != "x") {
+    //checks to see if user just wants to quit; used below as well
+    if(fullName != "x") { 
         temp.set_full(fullName);
     } else {
         return;
@@ -222,7 +224,7 @@ void addEntry(Database& database) {
     printEntries(database);
 
 }
-
+//retrieves full names from user
 string getFullName(const Database& database) {
     cout << "Please enter team name: ";
     cin.ignore(100, '\n');
@@ -232,7 +234,7 @@ string getFullName(const Database& database) {
     for(char ch : userInput) {
         s += tolower(ch);
     }
-    if(s == "x") {
+    if(s == "x") {//check for user immediate exit
         return "x";
     }
     bool isValid = false;
@@ -243,7 +245,7 @@ string getFullName(const Database& database) {
                 exists = true;
             }
         }
-        if(exists) {
+        if(exists) { //checks to make sure duplicate isnt added
             cout << "That team already exists. Try again." << endl;
             getline(cin, userInput);
         } else if (userInput == "") {
@@ -255,7 +257,7 @@ string getFullName(const Database& database) {
     }
     return userInput;
 };
-
+//retrieve short name/abbreviation from user
 string getShortName() {
     cout << "Please enter your team's short name: ";
     string userInput;
@@ -269,7 +271,7 @@ string getShortName() {
     }
     return userInput;
 };
-
+//function to retrieve vector of games the team plays
 vector<string> getDivList() {
     cout << "Which games does your team participate in? Enter the exact game index number." << endl;
     cout << "When you have finished entering your list, please enter 0 to indicate so." << endl << endl;;
@@ -284,10 +286,12 @@ vector<string> getDivList() {
         cout << "(" << i+1 << ")" << " " << eligibleGames.at(i) << endl;
     }
     cin >> userInput;
+    //if user enters something other than int, program crashes (successfully)
     if(cin.fail()) {
         cout << "You have not read instructions properly. Program is aborting now." << endl;
         exit(EXIT_FAILURE);
     }
+    //statement to check if user wants to exit
     if(userInput == -1) {
         vector<string> empty = {};
         return empty;
@@ -313,7 +317,7 @@ vector<string> getDivList() {
                 }
             }
         }
-        if(!isEligible) {
+        if(!isEligible) { //checks to see if option is plausible
             if(userInput == -1) {
                 vector<string> empty = {};
                 return empty;
@@ -322,14 +326,16 @@ vector<string> getDivList() {
         }
         cin >> userInput;
     }
+    //sorts gamesPlayed vector for convenience
     sort(gamesPlayed.begin(), gamesPlayed.end());
     cout << "Ok. Here are your team's games played: " << endl;
+    //program repeats back what is inputted
     for(string s : gamesPlayed) {
         cout << s << endl;
     }
     return gamesPlayed;
 };
-
+//retrieves team headquarters
 string getLocation() {
     cout << "Please enter your team's region/country: ";
     cin.ignore(100, '\n');
@@ -362,6 +368,7 @@ int getYearFounded() {
     cout << "If you'd like to return to the main menu, please enter \"-1\"." << endl;
     int userInput;
     cin >> userInput;
+    //if int isnt entered, user is prompted again.
     while (cin.fail()){
         cout << "Sorry, that's an invalid entry. Please Try Again." << endl;
         cin >> userInput;
@@ -379,6 +386,7 @@ float getNetWorth() {
     }
     bool isNum = true;
     bool isDecimal = false;
+    //loop to check if the input is a num (decimal or int)
     for(int i = 0; i < userInput.length(); i++) {
         if(!isdigit(userInput.at(i))) {
             if(userInput.at(i) == '.' && !isDecimal) {
@@ -403,6 +411,7 @@ float getNetWorth() {
 ///////////////////////////////////////////////////////////////////////////////
 
 const int MAXSETWIDTH = 30;
+//sub-main menu
 void deleteEntry(Database &database) {
     if (database.get_database().empty()){
         cout << "There are no records in the database!\n\n";
@@ -440,11 +449,13 @@ void deleteEntry(Database &database) {
 }
 
 void deleteByName(Database &database) {
+    //first, teams within are listed
     cout << "Teams in database: \n";
     for(Team f : database.get_database()) {
         cout << f.get_full() << endl;
     }
-    cout << "Please enter the team name that you want to delete: ";
+    cout << "Please enter the team name that you want to delete; ";
+    cout << "Enter the exact name as it appears: ";
     string userInput;
     getline(cin, userInput);
     
@@ -472,6 +483,7 @@ void deleteByName(Database &database) {
 }
 
 void deleteByLocation(Database &database) {
+    //teams are listed (like deleteByName fct)
     cout << "Here are the teams, sorted by location: " << endl;
     database.sort_by_location();
     for(Team t : database.get_database()) {
@@ -487,6 +499,7 @@ void deleteByLocation(Database &database) {
     int firstIndex = -1;
     int lastIndex = -2;
     vector<Team> temp = database.get_database();
+    //loop that allows program to delete all entries with specified location
     for(Team t : temp) {
         if(t.get_location() == userInput) {
             if(!exists) {
@@ -503,6 +516,7 @@ void deleteByLocation(Database &database) {
     }
     temp.erase(temp.begin() + firstIndex, temp.begin() + lastIndex);
     database.replaceVector(temp);
+    //reprint of remaining teams
     for(Team t : database.get_database()) {
         int length = t.get_full().length();
         cout << t.get_full() << setw(MAXSETWIDTH - length);
@@ -526,6 +540,7 @@ void deleteByYearFounded(Database &database) {
     int firstIndex = -1;
     int lastIndex = -2;
     vector<Team> temp = database.get_database();
+    //same loop that checks so it can delete all entries with specified date
     for(Team t : temp) {
         if(t.get_dateFounded() == userInput) {
             if(!exists) {
@@ -542,6 +557,7 @@ void deleteByYearFounded(Database &database) {
     }
     temp.erase(temp.begin() + firstIndex, temp.begin() + lastIndex);
     database.replaceVector(temp);
+    //reprints the revised list of teams in database
     for(Team t : database.get_database()) {
         int length = t.get_full().length();
         cout << t.get_full() << setw(MAXSETWIDTH - length);
@@ -626,6 +642,8 @@ void listEntries(Database &database) {
         string input;
         cin >> input;
         cout << endl;
+        //after user chooses which field to sort by, they are
+        //asked if they want to sort in reverse.
         if (cmpt::clean(input) == "a"){
             cout << "Would you like your sort in reverse?" << endl;
             cout << "If \"Y\" isn't entered, your answer will be assumed as no: "; 
