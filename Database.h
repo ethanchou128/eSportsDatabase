@@ -4,7 +4,6 @@
 #define DATABASE_H
 
 #include "tools.h"
-#include "divisions.h"
 #include "Team.h"
 #include <iostream>
 #include <string>
