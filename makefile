@@ -19,7 +19,7 @@ SRCS := $(wildcard *.cpp)
 OBJS := $(patsubst %.cpp,%.o,$(SRCS))
 CC := g++
 CFLAGS := -Wall -g
-TARGET := test
+TARGET := a5
 
 all: $(TARGET)
 $(TARGET): $(OBJS)
